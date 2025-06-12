@@ -9,9 +9,11 @@ import { MongooseModule } from "@nestjs/mongoose";
       connectionName: process.env.AUTH_DB,
       useFactory: async (config: ConfigService) => ({
         uri: process.env.MONGODB_URI,
+        dbName:process.env.AUTH_DB,
       }),
       inject: [ConfigService],
     }),
   ],
+  
 })
 export class DatabaseModule {}

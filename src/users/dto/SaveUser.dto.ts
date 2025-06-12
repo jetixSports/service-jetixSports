@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import {
   IsString,
   IsEmail,
@@ -27,6 +28,8 @@ export class SaveUserDto {
   @Matches(/@(gmail|outlook|hotmail|yahoo)\.com$/, {
     message: "El correo electrónico no cumple con el formato",
   })
+    @Transform(({ value }) => value.toLowerCase().trim())
+  
   email: string;
 
   @IsOptional()

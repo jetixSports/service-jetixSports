@@ -1,5 +1,5 @@
 import { IsString, Matches } from "class-validator";
-
+import { Transform } from 'class-transformer';
 export class EmailDto {
   @IsString()
   @Matches(/^[a-zA-Z0-9._%+-]{8,15}@/, {
@@ -8,5 +8,6 @@ export class EmailDto {
   @Matches(/@(gmail|outlook|hotmail|yahoo)\.com$/, {
     message: "El correo electrónico no cumple con el formato",
   })
+  @Transform(({ value }) => value.toLowerCase().trim())
   email: string;
 }

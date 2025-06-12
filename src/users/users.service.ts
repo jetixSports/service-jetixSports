@@ -7,7 +7,7 @@ import {
 import { UsersRepository } from "./users.repository";
 import { EmailDto } from "./dto/Email.dto";
 import { UpdateUserDto } from "./dto/UpdateUser.dto";
-import { SaveUserDto } from "./dto/SaveUser.dto copy";
+import { SaveUserDto } from "./dto/SaveUser.dto";
 
 @Injectable()
 export class UsersService {

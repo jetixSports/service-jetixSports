@@ -6,7 +6,6 @@ import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Users, UsersSchema } from "./users.schema";
-import { DatabaseModule } from "src/database/database.module";
 
 @Module({
   imports: [

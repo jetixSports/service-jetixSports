@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import {
   IsString,
   IsEmail,
@@ -25,6 +26,7 @@ export class SignInDto {
   @Matches(/@(gmail|outlook|hotmail|yahoo)\.com$/, {
     message: "El correo electrónico no cumple con el formato",
   })
+  @Transform(({ value }) => value.toLowerCase().trim())
   email: string;
 
   @IsString()

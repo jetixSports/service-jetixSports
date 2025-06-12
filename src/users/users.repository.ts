@@ -8,8 +8,7 @@ import { Users } from "./users.schema";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { UpdateUserDto } from "./dto/UpdateUser.dto";
-import { EmailDto } from "./dto/Email.dto";
-import { SaveUserDto } from "./dto/SaveUser.dto copy";
+import { SaveUserDto } from "./dto/SaveUser.dto";
 
 @Injectable()
 export class UsersRepository {
@@ -21,12 +20,10 @@ export class UsersRepository {
   async findOneByEmail(email: string, ignoreAtt = ["password"]) {
     const options =
       ignoreAtt.length > 0
-        ? {
-            projection: ignoreAtt.reduce(
+        ?  ignoreAtt.reduce(
               (acc, item) => ({ ...acc, [item]: 0 }),
               {}
-            ),
-          }
+            )
         : {};
     const user = await this.usersModel.findOne({ email }, options);
     return user;
