@@ -27,7 +27,6 @@ export class SignInDto {
   })
   email: string;
 
-  @IsOptional()
   @IsString()
   @MinLength(8, { message: "La contraseña debe tener almenos de 8 caracteres" })
   @MaxLength(15, {
@@ -37,7 +36,7 @@ export class SignInDto {
     message: "La contraseña debe tener al menos una mayúscula y un símbolo",
   })
   password: string;
-
+  @IsOptional()
   @IsString()
   tokenNotification?: string;
 }
