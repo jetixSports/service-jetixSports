@@ -3,23 +3,36 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
-} from '@nestjs/common';
-import { UsersRepository } from './users.repository';
-import { Users } from './users.schema';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
+} from "@nestjs/common";
+import { UsersRepository } from "./users.repository";
+import { EmailDto } from "./dto/Email.dto";
+import { UpdateUserDto } from "./dto/UpdateUser.dto";
+import { SaveUserDto } from "./dto/SaveUser.dto copy";
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly usersRepository: UsersRepository,
-    @InjectModel(Users.name, 'usersDB') private userModel: Model<Users>
-  ) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
-  async findOneByEmail(email: string){
-
-    // if (!user) throw new NotFoundException('User not found');
-    return 123
+  async findOneByEmail({ email }: EmailDto, ignoreAtt?: string[]) {
+    const user = await this.usersRepository.findOneByEmail(email, ignoreAtt);
+    if (!user) throw new NotFoundException("Usuario no encontrado");
+    return user;
   }
-
+  async updateUser({ email }: EmailDto, updateUser: UpdateUserDto) {
+    const updateState = await this.usersRepository.updateUser(
+      email,
+      updateUser
+    );
+    if (updateState.matchedCount < 1)
+      throw new NotFoundException("Usuario a actualizar no encontrado");
+    if (updateState.matchedCount < 1)
+      throw new NotFoundException("Usuario encontrado, pero no actualizado");
+    return { statusCode: 200, message: "Usuario actualizado con exito" };
+  }
+  async existingEmail({ email }: EmailDto) {
+    return await this.usersRepository.existingEmail(email);
+  }
+  async saveUser(saveUserDto: SaveUserDto) {
+    return await this.usersRepository.saveUser(saveUserDto);
+  }
 }

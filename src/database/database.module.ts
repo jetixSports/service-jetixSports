@@ -1,14 +1,17 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { MongooseModule } from "@nestjs/mongoose";
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27018/Auth', {
-      connectionName: 'Auth',
-    }),
-    MongooseModule.forRoot('mongodb://localhost:27018/Tournaments', {
-      connectionName: 'Tournaments',
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      connectionName: process.env.AUTH_DB,
+      useFactory: async (config: ConfigService) => ({
+        uri: process.env.MONGODB_URI,
+      }),
+      inject: [ConfigService],
     }),
   ],
 })
-export class MongoModule {}
+export class DatabaseModule {}
