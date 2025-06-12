@@ -1,5 +1,5 @@
 FROM node:20-alpine3.18 AS base
-ENV DIR /web-jetix-sports
+ENV DIR /service-jetixSports
 WORKDIR $DIR
 
 ############################## DEV ##################################
