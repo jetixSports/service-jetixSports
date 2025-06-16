@@ -3,7 +3,7 @@ import { AuthService } from "./auth.service";
 import { Auth } from "src/decorators/auth/auth.decorator";
 import { LoginDto } from "./dto/Login.dto";
 import { Request } from "express";
-import { SignInDto } from "./dto/SignIn.dto";
+import { SignUpDto } from "./dto/SignUp.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -14,8 +14,8 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
   @Auth("NoAuth")
-  @Post("signIn")
-  signIn(@Req() request: Request, @Body(ValidationPipe) signIn: SignInDto) {
-    return this.authService.signIn(signIn);
+  @Post("signUp")
+  signUp(@Req() request: Request, @Body(ValidationPipe) signUpDto: SignUpDto) {
+    return this.authService.signIn(signUpDto);
   }
 }

@@ -19,8 +19,13 @@ export class AuthRepository {
 
   async validateSessionToken({ token, _id, email }:ValidateTokenDto) {
     if (!token) return false;
-    const verifyToken = await this.jwtService.verify(token);
-    if (!verifyToken) return false;
+    try{
+      const verifyToken = await this.jwtService.verify(token);
+      if (!verifyToken) return false;
+    }catch(error){
+      console.log(error);
+      return false
+    }
     const tokenData = await this.jwtService.decode(token);
     return tokenData?._id == _id && tokenData?.email == email;
   }

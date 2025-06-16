@@ -1,14 +1,12 @@
 import {
-  BadRequestException,
   ForbiddenException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { LoginDto } from "./dto/Login.dto";
 import { AuthRepository } from "./auth.repository";
 import { UsersService } from "src/users/users.service";
-import { SignInDto } from "./dto/SignIn.dto";
+import { SignUpDto } from "./dto/SignUp.dto";
 
 @Injectable()
 export class AuthService {
@@ -53,7 +51,7 @@ export class AuthService {
       data: userSession,
     };
   }
-  async signIn(signInDto: SignInDto) {
+  async signIn(signInDto: SignUpDto) {
     const existingUser = await this.usersService.existingEmail({
       email: signInDto.email,
     });

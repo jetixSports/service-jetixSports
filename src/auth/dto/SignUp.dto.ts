@@ -10,7 +10,7 @@ import {
   IsIn,
 } from "class-validator";
 
-export class SignInDto {
+export class SignUpDto {
   @IsString()
   @MaxLength(50)
   firstName: string;
