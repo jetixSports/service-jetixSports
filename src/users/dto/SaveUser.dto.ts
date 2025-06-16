@@ -8,6 +8,7 @@ import {
   MaxLength,
   Matches,
   IsIn,
+  IsNotEmpty,
 } from "class-validator";
 
 export class SaveUserDto {
@@ -63,4 +64,13 @@ export class SaveUserDto {
   @IsOptional()
   @IsString()
   tokenNotification?: string;
+
+  @IsNotEmpty({ message: 'El username no puede estar vacío' })
+    @IsString({ message: 'El username debe ser una cadena de texto' })
+    @MinLength(4, { message: 'El username debe tener al menos 4 caracteres' })
+    @MaxLength(20, { message: 'El username no puede exceder los 20 caracteres' })
+    @Matches(/^[a-zA-Z0-9_]+$/, {
+      message: 'El username solo puede contener letras, números y guiones bajos (_)'
+    })
+    username: string;
 }

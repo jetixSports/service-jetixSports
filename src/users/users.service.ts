@@ -1,13 +1,12 @@
 import {
-  BadRequestException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from "@nestjs/common";
 import { UsersRepository } from "./users.repository";
 import { EmailDto } from "./dto/Email.dto";
 import { UpdateUserDto } from "./dto/UpdateUser.dto";
 import { SaveUserDto } from "./dto/SaveUser.dto";
+import { UsernameDto } from "./dto/Username.dto";
 
 @Injectable()
 export class UsersService {
@@ -31,6 +30,9 @@ export class UsersService {
   }
   async existingEmail({ email }: EmailDto) {
     return await this.usersRepository.existingEmail(email);
+  }
+  async existingUsername({ username }: UsernameDto) {
+    return await this.usersRepository.existingUsername(username);
   }
   async saveUser(saveUserDto: SaveUserDto) {
     return await this.usersRepository.saveUser(saveUserDto);

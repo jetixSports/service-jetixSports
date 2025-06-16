@@ -35,6 +35,10 @@ export class UsersRepository {
     const countUsers = await this.usersModel.countDocuments({ email });
     return countUsers > 0;
   }
+  async existingUsername(username: string) {
+    const countUsers = await this.usersModel.countDocuments({ username });
+    return countUsers > 0;
+  }
   async saveUser(saveUserDto: SaveUserDto) {
     const newUser = new this.usersModel(saveUserDto);
     const user = await newUser.save();

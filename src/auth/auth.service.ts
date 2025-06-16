@@ -52,11 +52,17 @@ export class AuthService {
     };
   }
   async signIn(signInDto: SignUpDto) {
-    const existingUser = await this.usersService.existingEmail({
+    const existingUserEmail = await this.usersService.existingEmail({
       email: signInDto.email,
     });
-    if (existingUser)
+    if (existingUserEmail)
       throw new ForbiddenException("Ya existe un usuario con este correo");
+
+    const existingUsername = await this.usersService.existingUsername({
+      username: signInDto.username,
+    });
+    if (existingUsername)
+      throw new ForbiddenException("Ya existe un usuario con este nombre de usuario");
     const encryptedPassword = await this.authRepository.encryptPassword(
       signInDto.password
     );
