@@ -24,7 +24,7 @@ export class UsersService {
     );
     if (updateState.matchedCount < 1)
       throw new NotFoundException("Usuario a actualizar no encontrado");
-    if (updateState.matchedCount < 1)
+    if (updateState.modifiedCount < 1)
       throw new NotFoundException("Usuario encontrado, pero no actualizado");
     return { statusCode: 200, message: "Usuario actualizado con exito" };
   }

@@ -8,14 +8,6 @@ import { UsersModule } from "src/users/users.module";
 
 @Module({
   imports: [
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>("JWT_SECRET"),
-        signOptions: { expiresIn: "1h" },
-      }),
-      inject: [ConfigService],
-    }),
     UsersModule,
   ],
   controllers: [AuthController],

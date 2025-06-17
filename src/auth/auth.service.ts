@@ -31,6 +31,7 @@ export class AuthService {
       token: user.tokenSession,
       email: user.email,
       _id: user._id,
+      role:user.role
     });
     if (isTokenValid)
       throw new UnauthorizedException("Ya posees una sesión activa");
