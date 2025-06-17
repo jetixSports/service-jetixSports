@@ -9,22 +9,26 @@ import { Permissions } from "src/decorators/permissions/permissions.decorator";
 @Controller("permissions")
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
-  @Auth("NoAuth")
+  @Permissions(["permissions"],'CREATE')
+  @Auth("Auth")
   @Post()
   savePermission(@Req() request: Request, @Body(ValidationPipe) savePermissionDto: SavePermissionDto) {
     return this.permissionsService.savePermission(savePermissionDto)
   }
-  @Auth("NoAuth")
+  @Permissions(["permissions"],'UPDATE')
+  @Auth("Auth")
   @Put()
   updatePermissions(@Req() request: Request, @Body(ValidationPipe) updatePermissionDto: UpdatePermissionDto) {
     return this.permissionsService.updatePermissions(updatePermissionDto)
   }
-  @Auth("NoAuth")
+  @Permissions(["permissions"],'DELETE')
+  @Auth("Auth")
   @Delete()
   deletePermission(@Req() request: Request, @Body(ValidationPipe) deletePermissionDto: SavePermissionDto) {
     return this.permissionsService.deletePermission(deletePermissionDto)
   }
-  @Auth("NoAuth")
+  @Permissions(["permissions"],'READ')
+  @Auth("Auth")
   @Post('findByCode')
   getPermissions(@Req() request: Request, @Body(ValidationPipe) getPermissionsDto: SavePermissionDto) {
     return this.permissionsService.getPermissions(getPermissionsDto)
@@ -34,8 +38,8 @@ export class PermissionsController {
   verifyPermissions(@Req() request: Request, @Body(ValidationPipe) verifyPermissionDto: VerifyPermissionDto) {
     return this.permissionsService.verifyPermissions(verifyPermissionDto)
   }
+  @Permissions(["permissions"],'READ')
   @Auth("Auth")
-  @Permissions(["curs11wo"])
   @Get()
   codesPermissions(@Req() request: Request) {
     return this.permissionsService.codesPermissions()

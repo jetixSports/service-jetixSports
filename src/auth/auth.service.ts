@@ -30,14 +30,14 @@ export class AuthService {
     const isTokenValid = await this.authRepository.validateSessionToken({
       token: user.tokenSession,
       email: user.email,
-      _id: user._id,
-      role:user.role
+      _id: user._id
     });
     if (isTokenValid)
       throw new UnauthorizedException("Ya posees una sesión activa");
     const generateToken = await this.authRepository.generateToken({
       email: user.email,
       _id: user._id,
+      role:user.role
     });
     await this.usersService.updateUser(
       { email: user.email },

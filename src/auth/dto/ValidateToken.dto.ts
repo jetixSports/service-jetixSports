@@ -26,8 +26,6 @@ export class ValidateTokenDto {
   @Transform(({ value }) => value.toLowerCase().trim())
   email: string;
 
-  @IsString()
-  role: string ;
 
 
 }

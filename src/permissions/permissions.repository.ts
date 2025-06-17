@@ -155,10 +155,10 @@ export class PermissionsRepository {
                     _id: 0,
                     code: 1,
                     permissions: {
-                        read: { $in: [role, "$READ"] },
-                        create: { $in: [role, "$CREATE"] },
-                        update: { $in: [role, "$UPDATE"] },
-                        delete: { $in: [role, "$DELETE"] }
+                        READ: { $in: [role, "$READ"] },
+                        CREATE: { $in: [role, "$CREATE"] },
+                        UPDATE: { $in: [role, "$UPDATE"] },
+                        DELETE: { $in: [role, "$DELETE"] }
                     }
                 }
             },

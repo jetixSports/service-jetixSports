@@ -19,28 +19,18 @@ export class AuthGuard implements CanActivate {
       return true;
     }
     if (!token) {
-      throw new ForbiddenException({
-        message: 'No se envio el Token',
-        codeStatus: 400,
-      });
+      throw new ForbiddenException( 'No se envio el Token');
     }
     try {
       const verifyToken = await this.jwtService.verify(token);
-      if (!verifyToken) throw new ForbiddenException({
-        message: 'Token expirado'
-      });;
+      if (!verifyToken) throw new ForbiddenException('Token expirado');
       const tokenData = await this.jwtService.decode(token);
       if(!tokenData?.email || !tokenData._id)
-        throw new ForbiddenException({
-        message: 'Token inválido'
-      });
+        throw new ForbiddenException('Token inválido');
       request.userData=tokenData
       return true;
     } catch (error) {
-      throw new ForbiddenException({
-        message: 'Token inválido o expirado',
-        codeStatus: 401,
-      });
+      throw new ForbiddenException('Token inválido o expirado');
     }
   }
 }
