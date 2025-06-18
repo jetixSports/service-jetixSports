@@ -1,7 +1,5 @@
 import {
   Injectable,
-  NotFoundException,
-  UnauthorizedException,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";

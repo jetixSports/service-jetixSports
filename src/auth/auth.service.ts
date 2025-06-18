@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   UnauthorizedException,
@@ -67,9 +68,10 @@ export class AuthService {
     const encryptedPassword = await this.authRepository.encryptPassword(
       signInDto.password
     );
-    return await this.usersService.saveUser({
+    const user=await this.usersService.saveUser({
       ...signInDto,
       password: encryptedPassword,
     });
+    return {...user,data:{}}
   }
 }

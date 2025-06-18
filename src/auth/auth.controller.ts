@@ -4,7 +4,6 @@ import { Auth } from "src/decorators/auth/auth.decorator";
 import { LoginDto } from "./dto/Login.dto";
 import { Request } from "express";
 import { SignUpDto } from "./dto/SignUp.dto";
-import { Permissions } from "src/decorators/permissions/permissions.decorator";
 
 @Controller("auth")
 export class AuthController {
