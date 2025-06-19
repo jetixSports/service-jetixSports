@@ -7,6 +7,8 @@ import { AuthModule } from "./auth/auth.module";
 import { PermissionsModule } from "./permissions/permissions.module";
 import { JwtGlobalModule, } from "./jwt/jwt.module";
 import { RolesModule } from "./roles/roles.module";
+import { ConfigModule } from "@nestjs/config";
+import configurations from "config/configurations";
 
 @Module({
   imports: [
@@ -15,7 +17,13 @@ import { RolesModule } from "./roles/roles.module";
     DatabaseModule,
     UsersModule,
     AuthModule,
-    PermissionsModule],
+    PermissionsModule,
+  ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env`,
+      load: [configurations],
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
