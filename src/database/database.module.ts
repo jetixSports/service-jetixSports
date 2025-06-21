@@ -13,6 +13,15 @@ import { MongooseModule } from "@nestjs/mongoose";
       }),
       inject: [ConfigService],
     }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      connectionName: process.env.PAYMENTS_DB,
+      useFactory: async (config: ConfigService) => ({
+        uri: process.env.MONGODB_URI,
+        dbName:process.env.PAYMENTS_DB,
+      }),
+      inject: [ConfigService],
+    }),
   ],
   
 })

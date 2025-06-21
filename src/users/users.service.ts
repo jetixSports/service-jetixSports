@@ -31,6 +31,9 @@ export class UsersService {
   async existingEmail({ email }: EmailDto) {
     return await this.usersRepository.existingEmail(email);
   }
+  async existingId({ _id }: {_id:string}) {
+    return await this.usersRepository.existingId(_id);
+  }
   async existingUsername({ username }: UsernameDto) {
     return await this.usersRepository.existingUsername(username);
   }

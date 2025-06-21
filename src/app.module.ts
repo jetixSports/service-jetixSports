@@ -8,6 +8,7 @@ import { PermissionsModule } from "./permissions/permissions.module";
 import { JwtGlobalModule, } from "./jwt/jwt.module";
 import { RolesModule } from "./roles/roles.module";
 import { ConfigModule } from "@nestjs/config";
+import { PaymentsDetailsModule } from './payments/payments-details/payments-details.module';
 import configurations from "config/configurations";
 
 @Module({
@@ -23,6 +24,7 @@ import configurations from "config/configurations";
       envFilePath: `.env`,
       load: [configurations],
     }),
+  PaymentsDetailsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
