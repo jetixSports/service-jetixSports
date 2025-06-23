@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable,  NotFoundException, ConflictException } from '@nestjs/common';
+import { BadRequestException, Injectable,  NotFoundException, ConflictException, ForbiddenException } from '@nestjs/common';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
 import { CurrencyRepository } from './currency.repository';
@@ -58,18 +58,13 @@ export class CurrencyService {
     }
 
     async update(id: string, updateCurrencyDto: UpdateCurrencyDto) {
+        if(updateCurrencyDto.code){
+            throw new ForbiddenException("No se puede actualizar el codigo de una moneda")
+        }
         // Verificar si la moneda existe
         const existingCurrency = await this.currencyRepository.findById(id);
         if (!existingCurrency) {
             throw new NotFoundException("Moneda no encontrada");
-        }
-
-        // Si se está actualizando el código, verificar que no exista otra moneda con el mismo código
-        if (updateCurrencyDto.code && updateCurrencyDto.code !== existingCurrency.code) {
-            const existingByCode = await this.currencyRepository.existingCurrencyByCode(updateCurrencyDto.code, id);
-            if (existingByCode) {
-                throw new ConflictException('Ya existe otra moneda con este código');
-            }
         }
 
         // Si se está actualizando el nombre, verificar que no exista otra moneda con el mismo nombre
@@ -78,7 +73,7 @@ export class CurrencyService {
             if (existingByName) {
                 const foundCurrency = await this.currencyRepository.find({
                     name: updateCurrencyDto.name});
-                if (foundCurrency.length > 0 && foundCurrency[0]._id.toString() !== id) {
+                if (foundCurrency.length > 0) {
                     throw new ConflictException('Ya existe otra moneda con este nombre');
                 }
             }
@@ -126,7 +121,7 @@ export class CurrencyService {
         if (!currency || currency.length === 0) {
             throw new NotFoundException(`Moneda con código ${code} no encontrada`);
         }
-        return currency[0];
+        return {statusCode:200,data:currency[0],message:"Moneda obtenida con exito"};
     }
 
     // Método para validar si una moneda existe por código

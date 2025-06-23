@@ -9,7 +9,7 @@ import { FindCurrencyDto } from "./dto/find-currency.dto";
 @Injectable()
 export class CurrencyRepository {
     constructor(
-        @InjectModel(Currency.name, process.env.CURRENCY_COLLECTION)
+        @InjectModel(Currency.name, process.env.PAYMENTS_DB)
         private currencyModel: Model<Currency>
     ) {}
 
@@ -56,7 +56,6 @@ export class CurrencyRepository {
     async update(_id: string, updateCurrencyDto: UpdateCurrencyDto) {
         const newData = JSON.parse(JSON.stringify(updateCurrencyDto));
         newData.updatedAt = new Date();
-        
         return await this.currencyModel.updateOne( { _id, status: { $ne: 'delete'}},{ $set: newData });
     }
 }

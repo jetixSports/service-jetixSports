@@ -10,6 +10,7 @@ import { RolesModule } from "./roles/roles.module";
 import { ConfigModule } from "@nestjs/config";
 import { PaymentsDetailsModule } from './payments/payments-details/payments-details.module';
 import configurations from "config/configurations";
+import { CurrencyModule } from "./payments/currency/currency.module";
 
 @Module({
   imports: [
@@ -19,12 +20,13 @@ import configurations from "config/configurations";
     UsersModule,
     AuthModule,
     PermissionsModule,
-  ConfigModule.forRoot({
+    ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env`,
       load: [configurations],
     }),
-  PaymentsDetailsModule,
+    PaymentsDetailsModule,
+    CurrencyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

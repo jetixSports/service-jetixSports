@@ -4,12 +4,14 @@ import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
 import { FindCurrencyDto } from './dto/find-currency.dto';
 import { Auth } from 'src/decorators/auth/auth.decorator';
+import { Permissions } from 'src/decorators/permissions/permissions.decorator';
 
 @Controller('currency')
 export class CurrencyController {
     constructor(private readonly currencyService: CurrencyService) {}
 
-    @Auth("Auth") // Solo administradores pueden crear monedas
+    @Permissions(["permissions"],'CREATE')
+    @Auth('Auth')
     @Post()
     create(@Body(ValidationPipe) createCurrencyDto: CreateCurrencyDto) {
         return this.currencyService.create(createCurrencyDto);
@@ -35,7 +37,8 @@ export class CurrencyController {
         return this.currencyService.findOne(id);
     }
 
-    @Auth("Admin") // Solo administradores pueden actualizar monedas
+    @Permissions(["permissions"],'UPDATE')
+    @Auth('Auth')
     @Patch(':id')
     update(
         @Param('id') id: string, 
@@ -43,8 +46,8 @@ export class CurrencyController {
     ) {
         return this.currencyService.update(id, updateCurrencyDto);
     }
-
-    @Auth("Admin") // Solo administradores pueden eliminar monedas
+    @Permissions(["permissions"],'DELETE')
+    @Auth('Auth')
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.currencyService.remove(id);

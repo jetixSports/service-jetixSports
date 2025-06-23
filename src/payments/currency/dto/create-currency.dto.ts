@@ -10,7 +10,7 @@ export class CreateCurrencyDto {
 
     @IsNotEmpty({ message: 'El código de la moneda es requerido' })
     @IsString({ message: 'El código debe ser una cadena de texto' })
-    @Length(1, 3, { message: 'El código debe tener entre 1 y 3 caracteres' })
+    @Length(2, 50, { message: 'El código debe tener entre 1 y 3 caracteres' })
     code: string;
 
     @IsNotEmpty({ message: 'El nombre corto de la moneda es requerido' })
