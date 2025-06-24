@@ -35,7 +35,8 @@ export class UsersRepository {
     const countUsers = await this.usersModel.countDocuments({ email });
     return countUsers > 0;
   }
-  async existingId(_id: string) {
+  
+   async existingId(_id: string) {
     const countUsers = await this.usersModel.countDocuments({ _id });
     return countUsers > 0;
   }
@@ -52,4 +53,30 @@ export class UsersRepository {
       data: user,
     };
   }
+  // Método para obtener todos los usuarios
+  async findAll() {
+    return await this.usersModel.find().select("-password"); // Excluyendo la contraseña por defecto
+  }
+
+  // Método para encontrar un usuario por ID
+  async findOneById(id: string) {
+    const user = await this.usersModel.findById(id);
+    if (!user) {
+      throw new NotFoundException("Usuario no encontrado");
+    }
+    return user;
+  }
+
+  // Método para eliminar un usuario por ID
+  async remove(id: string) {
+    const result = await this.usersModel.deleteOne({ _id: id });
+    if (result.deletedCount === 0) {
+      throw new NotFoundException("Usuario no encontrado");
+    }
+    return {
+      statusCode: 200,
+      message: "Usuario con ID ${id} eliminado con éxito,"
+    };
+  }
+  
 }

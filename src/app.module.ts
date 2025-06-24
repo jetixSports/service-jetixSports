@@ -5,6 +5,7 @@ import { UsersModule } from "./users/users.module";
 import { DatabaseModule } from "./database/database.module";
 import { AuthModule } from "./auth/auth.module";
 import { PermissionsModule } from "./permissions/permissions.module";
+import { InvitationModule } from "./invitations/invitation.module";
 import { JwtGlobalModule, } from "./jwt/jwt.module";
 import { RolesModule } from "./roles/roles.module";
 import { ConfigModule } from "@nestjs/config";
@@ -21,6 +22,7 @@ import { ImagesModule } from './utils/images/images.module';
     UsersModule,
     AuthModule,
     PermissionsModule,
+    InvitationModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env`,

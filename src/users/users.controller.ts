@@ -2,15 +2,19 @@ import {
   Body,
   Controller,
   Post,
-  Patch, // Importamos Patch para la actualización
-  HttpCode, // Para especificar códigos de estado HTTP
-  HttpStatus, // Para usar códigos de estado HTTP como HttpStatus.NO_CONTENT
-  NotFoundException,
+  Req,
   ValidationPipe,
-  Query // Para capturar parámetros de consulta como ignoreAtt
+  Get,     
+  Put,     
+  Patch,   
+  Delete,  
+  Param,   
+  NotFoundException, 
+  HttpStatus, 
+  HttpCode 
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { EmailDto } from "./dto/Email.dto";
+import { EmailDto } from "./dto/Email.dto"; 
 import { UpdateUserDto } from "./dto/UpdateUser.dto";
 import { SaveUserDto } from "./dto/SaveUser.dto";
 import { UsernameDto } from "./dto/Username.dto";
@@ -19,20 +23,48 @@ import { UsernameDto } from "./dto/Username.dto";
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // --- Endpoints basados en UsersService ---
-
-  // 1. findOneByEmail: Buscar usuario por email
-  // POST /users/findByEmail
-  // Utiliza POST para enviar el email en el cuerpo, que es más seguro para datos sensibles.
+  // **Endpoint existente (Ver por Email)**
   @Post("findByEmail")
-  async findUser(@Body(ValidationPipe) emailDto: EmailDto, @Query('ignoreAtt') ignoreAtt?: string[]) {
+  async findOneByEmail(emailDto: EmailDto, ignoreAtt?: string[]) {
     return this.usersService.findOneByEmail(emailDto, ignoreAtt);
   }
 
-  // 2. updateUser: Actualizar un usuario existente
-  // PATCH /users/updateUser
-  // Usamos PATCH porque es una actualización parcial basada en email.
-  @Patch("updateUser")
+  @Post("existingUsername") // POST para body, GET para query. Si prefieres GET: @Get("existingUsername")
+  async existingUsername(@Body(ValidationPipe) usernameDto: UsernameDto) { // Si usas POST para UsernameDto en body
+  // async existingUsername(@Query(ValidationPipe) usernameDto: UsernameDto) { // Si usas GET para UsernameDto en query
+    return this.usersService.existingUsername(usernameDto);
+  }
+
+  // **1. Crear Usuario (Create)**
+  // POST /users
+  @Post()
+  @HttpCode(HttpStatus.CREATED) // Responde con 201 Created al éxito
+  async create(@Body(ValidationPipe) createUserDto: SaveUserDto) {
+    return this.usersService.saveUser(createUserDto);
+  }
+
+  // **2. Ver Todos los Usuarios (Read All)**
+  // GET /users
+  @Get()
+  async findAll() {
+    return this.usersService.findAll();
+  }
+
+  // **3. Ver Usuario por ID (Read One)**
+  // GET /users/:id
+  @Get(":id")
+  async findOne(@Param("id") id: string) {
+    const user = await this.usersService.findOneById(id);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found.`);
+    }
+    return user;
+  }
+
+  // **4. Actualizar Usuario (Update - PATCH para actualizaciones parciales)**
+  // PATCH /users/:id
+  // Se recomienda PATCH para actualizaciones parciales. Si necesitas reemplazo completo, usa PUT.
+   @Patch("updateUser")
   async updateUser(
     @Body(ValidationPipe) emailDto: EmailDto, // Espera el email en el cuerpo para identificar
     @Body(ValidationPipe) updateUserDto: UpdateUserDto // Espera los datos a actualizar
@@ -42,30 +74,15 @@ export class UsersController {
     return this.usersService.updateUser(emailDto, updateUserDto);
   }
 
-  // 3. existingEmail: Verificar si un email ya existe
-  // GET /users/existingEmail?email=test@example.com
-  // Usamos GET con un parámetro de consulta (query parameter) para el email.
-  @Post("existingEmail") // POST para body, GET para query. Si prefieres GET: @Get("existingEmail")
-  async existingEmail(@Body(ValidationPipe) emailDto: EmailDto) { // Si usas POST para EmailDto en body
-  // async existingEmail(@Query(ValidationPipe) emailDto: EmailDto) { // Si usas GET para EmailDto en query
-    return this.usersService.existingEmail(emailDto);
-  }
-
-  // 4. existingUsername: Verificar si un nombre de usuario ya existe
-  // GET /users/existingUsername?username=testuser
-  // Usamos GET con un parámetro de consulta para el username.
-  @Post("existingUsername") // POST para body, GET para query. Si prefieres GET: @Get("existingUsername")
-  async existingUsername(@Body(ValidationPipe) usernameDto: UsernameDto) { // Si usas POST para UsernameDto en body
-  // async existingUsername(@Query(ValidationPipe) usernameDto: UsernameDto) { // Si usas GET para UsernameDto en query
-    return this.usersService.existingUsername(usernameDto);
-  }
-
-  // 5. saveUser: Guardar (crear) un nuevo usuario
-  // POST /users/save
-  // O simplemente POST /users si sigues una convención más RESTful para crear.
-  @Post("save")
-  @HttpCode(HttpStatus.CREATED) // Responde con 201 Created al éxito
-  async saveUser(@Body(ValidationPipe) saveUserDto: SaveUserDto) {
-    return this.usersService.saveUser(saveUserDto);
+  // **5. Eliminar Usuario (Delete)**
+  // DELETE /users/:id
+  @Delete(":id")
+  @HttpCode(HttpStatus.NO_CONTENT) // Responde con 204 No Content al éxito de eliminación
+  async remove(@Param("id") id: string) {
+    const result = await this.usersService.remove(id);
+    if (!result) { // Asumiendo que el servicio devuelve true/false o un objeto si se eliminó
+      throw new NotFoundException(`User with ID ${id} not found.`);
+    }
+    // No Content para DELETE exitoso sin cuerpo de respuesta.
   }
 }
