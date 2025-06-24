@@ -11,6 +11,7 @@ import { ConfigModule } from "@nestjs/config";
 import { PaymentsDetailsModule } from './payments/payments-details/payments-details.module';
 import configurations from "config/configurations";
 import { CurrencyModule } from "./payments/currency/currency.module";
+import { ImagesModule } from './utils/images/images.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CurrencyModule } from "./payments/currency/currency.module";
     }),
     PaymentsDetailsModule,
     CurrencyModule,
+    ImagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
