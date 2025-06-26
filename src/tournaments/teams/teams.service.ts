@@ -44,7 +44,7 @@ export class TeamsService {
   // Eliminar equipo
   async deleteTeam({ _id }: TeamIdDto) {
     const deleteResult = await this.teamsRepository.deleteTeam(_id);
-    if (deleteResult.deletedCount < 1) {
+    if (deleteResult.matchedCount < 1) {
       throw new NotFoundException("Equipo no encontrado");
     }
     return { statusCode: 200, message: "Equipo eliminado con éxito" };

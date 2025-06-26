@@ -8,7 +8,7 @@ import { UpdateTeamDto } from "./dto/UpdateTeam.dto";
 @Injectable()
 export class TeamsRepository {
   constructor(
-    @InjectModel(Teams.name, process.env.TEAMS_COLLECTION)
+    @InjectModel(Teams.name, process.env.TOURNAMENTS_DB)
     private teamsModel: Model<Teams>
   ) {}
 
@@ -28,17 +28,17 @@ export class TeamsRepository {
   }
 
   async findTeamByName(name: string) {
-    const team = await this.teamsModel.findOne({ name });
+    const team = await this.teamsModel.findOne({ name,status:{$ne:"delete"} });
     return team;
   }
 
   async findAllTeams(filters: any = {}) {
-    const teams = await this.teamsModel.find(filters);
+    const teams = await this.teamsModel.find({status:{$ne:"delete"},...filters});
     return teams;
   }
 
   async updateTeam(_id: string, updateTeamDto: UpdateTeamDto) {
-    return await this.teamsModel.updateOne({ _id }, { $set: updateTeamDto });
+    return await this.teamsModel.updateOne({ _id, status:{$ne:"delete"} }, { $set: updateTeamDto });
   }
 
   async deleteTeam(_id: string) {
@@ -46,18 +46,18 @@ export class TeamsRepository {
   }
 
   async existingTeamName(name: string, excludeId?: string) {
-    const query = excludeId ? { name, _id: { $ne: excludeId } } : { name };
+    const query = excludeId ? { name, _id: { $ne: excludeId },status:{$ne:"delete"} } : { name,status:{$ne:"delete"} };
     const countTeams = await this.teamsModel.countDocuments(query);
     return countTeams > 0;
   }
 
   async existingTeamId(_id: string) {
-    const countTeams = await this.teamsModel.countDocuments({ _id });
+    const countTeams = await this.teamsModel.countDocuments({ _id ,status:{$ne:"delete"}});
     return countTeams > 0;
   }
 
   async findTeamsByMember(memberId: string) {
-    return await this.teamsModel.find({ members: memberId });
+    return await this.teamsModel.find({ members: memberId,status:{$ne:"delete"} });
   }
 
   async getTeamMembersCount(_id: string) {

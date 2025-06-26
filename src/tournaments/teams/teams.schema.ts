@@ -28,3 +28,4 @@ export class Teams extends Document {
   @Prop({ select: false, default: "" })
   __v: number;
 }
+export const TeamsSchema = SchemaFactory.createForClass(Teams);

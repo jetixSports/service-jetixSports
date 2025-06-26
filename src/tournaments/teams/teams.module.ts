@@ -9,7 +9,7 @@ import { Teams, TeamsSchema } from "./teams.schema";
   imports: [
     MongooseModule.forFeature(
       [{ name: Teams.name, schema: TeamsSchema }],
-      process.env.TEAMS_COLLECTION
+      process.env.TOURNAMENTS_DB
     ),
   ],
   controllers: [TeamsController],

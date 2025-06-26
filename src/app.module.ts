@@ -13,7 +13,7 @@ import { PaymentsDetailsModule } from './payments/payments-details/payments-deta
 import configurations from "config/configurations";
 import { CurrencyModule } from "./payments/currency/currency.module";
 import { ImagesModule } from './utils/images/images.module';
-import { TeamsModule } from "./teams/teams.module";
+import { TeamsModule } from "./tournaments/teams/teams.module";
 
 @Module({
   imports: [
