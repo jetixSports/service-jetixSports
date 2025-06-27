@@ -14,6 +14,8 @@ import configurations from "config/configurations";
 import { CurrencyModule } from "./payments/currency/currency.module";
 import { ImagesModule } from './utils/images/images.module';
 import { TeamsModule } from "./tournaments/teams/teams.module";
+import { PaymentsHistoryModule } from './payments/payments-history/payments-history.module';
+import { TournamentsModule } from './tournaments/tournaments/tournaments.module';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { TeamsModule } from "./tournaments/teams/teams.module";
     CurrencyModule,
     ImagesModule,
     TeamsModule,
+    PaymentsHistoryModule,
+    TournamentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

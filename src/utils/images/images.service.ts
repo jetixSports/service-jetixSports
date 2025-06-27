@@ -22,7 +22,7 @@ export class ImagesService {
         file,
         imgPath:createImageDto.type
       })
-      return { statusCode: 200,message:'Imagen guardada con exito' };
+      return saveImage
     } catch (error) {
       throw new Error(`Error al guardar la imagen: ${error.message}`);
     }
