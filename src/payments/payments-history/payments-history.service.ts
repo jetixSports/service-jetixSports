@@ -45,7 +45,7 @@ export class PaymentsHistoryService {
     const savePayments = await this.paymentsHistoryRepository.create({
       ...createPaymentHistoryDto,
       _idImg: saveImage.data._id + "",
-      _idUserVerify: "sa",
+      _idUserVerify: dataTournament.data._idReferee,
     });
     await this.tournamentsService.addPayTeam({
       _idPayment: savePayments.data._id + "",
