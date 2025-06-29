@@ -5,33 +5,22 @@ import {
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Invitation } from "./invitation.schema"; 
-import { SaveInvitationDto } from "./dto/SaveInvitation.dto"; 
-import { UpdateInvitationDto } from "./dto/UpdateInvitation.dto";
+import { FindInvitationDto } from "./dto/UpdateInvitation.dto";
+import { CreateInvitationDto } from "./dto/CreateInvitation.dto";
 
 @Injectable()
 export class InvitationsRepository {
   constructor(
-    @InjectModel(Invitation.name, process.env.INVITATION_DB)
+    @InjectModel(Invitation.name, process.env.TOURNAMENTS_DB)
     private invitationModel: Model<Invitation>
   ) {}
-
-  // Método para encontrar una invitación por ID
-  async findOneById(id: string) {
-    const invitation = await this.invitationModel.findById(id);
-    if (!invitation) {
-      throw new NotFoundException("Invitación no encontrada");
-    }
-    return invitation;
-  }
-
-  // Método para obtener todas las invitaciones
-  async findAll() {
-    return await this.invitationModel.find();
+  async find(findInvitationDto:FindInvitationDto) {
+    return await this.invitationModel.find(findInvitationDto);
   }
 
   // Método para guardar una nueva invitación
-  async saveInvitation(saveInvitationDto: SaveInvitationDto) {
-    const newInvitation = new this.invitationModel(saveInvitationDto);
+  async saveInvitation(createInvitationDto: CreateInvitationDto) {
+    const newInvitation = new this.invitationModel(createInvitationDto);
     const invitation = await newInvitation.save();
     return {
       statusCode: 200,
@@ -40,21 +29,11 @@ export class InvitationsRepository {
     };
   }
 
-  // Método para actualizar una invitación por ID
-  async updateInvitation(id: string, updateInvitationDto: UpdateInvitationDto) {
-    const invitation = await this.findOneById(id);
-    return await this.invitationModel.updateOne({ _id: invitation._id }, { $set: updateInvitationDto });
+  async existInvitation(teamId:string,userId:string,status:string){
+    const countInvitation=await this.invitationModel.countDocuments({teamId,userId,status})
+    return countInvitation>0
   }
-
-  // Método para eliminar una invitación por ID
-  async remove(id: string) {
-    const result = await this.invitationModel.deleteOne({ _id: id });
-    if (result.deletedCount === 0) {
-      throw new NotFoundException("Invitación no encontrada");
-    }
-    return {
-      statusCode: 200,
-      message: "Invitación con ID ${id} eliminada con éxito",
-    };
+  async changeInvitation(findInvitationDto:FindInvitationDto,status:string){
+    return await this.invitationModel.updateOne(findInvitationDto,{$set:{status}})
   }
 }

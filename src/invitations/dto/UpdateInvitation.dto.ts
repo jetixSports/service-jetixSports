@@ -1,13 +1,11 @@
+import { PartialType } from '@nestjs/swagger';
 import { IsString, IsOptional, IsEmail } from 'class-validator';
+import { CreateInvitationDto } from './CreateInvitation.dto';
 
-export class UpdateInvitationDto {
-  @IsString()
-  @IsOptional()
-  readonly email?: string;
+export class FindInvitationDto extends PartialType(CreateInvitationDto) {
 
   @IsString()
   @IsOptional()
-  readonly message?: string;
+   _id?: string;
 
-  // Agrega otros campos según sea necesario
 }

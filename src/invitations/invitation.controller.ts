@@ -1,28 +1,30 @@
 import { Body, Controller, Post, Get, Param, Patch } from '@nestjs/common';
 import { InvitationsService } from './invitation.service';
 import { Invitation } from './invitation.schema';
+import { CreateInvitationDto } from './dto/CreateInvitation.dto';
+import { FindInvitationDto } from './dto/UpdateInvitation.dto';
 
 @Controller('invitations')
 export class InvitationsController {
   constructor(private readonly invitationsService: InvitationsService) {}
 
   @Post()
-  create(@Body() invitation: Invitation): Invitation {
-    return this.invitationsService.createInvitation(invitation);
+  create(@Body() createInvitationDto: CreateInvitationDto) {
+    return this.invitationsService.createInvitation(createInvitationDto);
   }
 
-  @Get()
-  findAll(): Invitation[] {
-    return this.invitationsService.getInvitations();
+  @Post("filter")
+  find(@Body() findInvitationDto: FindInvitationDto) {
+    return this.invitationsService.getInvitations(findInvitationDto);
   }
 
-  @Patch('accept/:id')
-  accept(@Param('id') id: string): Invitation | null {
-    return this.invitationsService.acceptInvitation(id);
+  @Patch('accept/')
+  accept(@Body() findInvitationDto: FindInvitationDto){
+    return this.invitationsService.changeInvitation(findInvitationDto,'accepted');
   }
 
   @Patch('deny/:id')
-  deny(@Param('id') id: string): Invitation | null {
-    return this.invitationsService.denyInvitation(id);
+  deny(@Body() findInvitationDto: FindInvitationDto) {
+    return this.invitationsService.changeInvitation(findInvitationDto,'denied');
   }
 }

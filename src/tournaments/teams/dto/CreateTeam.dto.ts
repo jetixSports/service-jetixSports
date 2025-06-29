@@ -9,6 +9,9 @@ export class CreateTeamDto {
   @IsOptional()
   _idImg?: string;
 
+  @IsString()
+  _idLeader: string;
+  
   @IsArray()
   @IsOptional()
   members?: string[];
