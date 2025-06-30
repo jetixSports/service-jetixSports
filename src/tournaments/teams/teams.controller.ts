@@ -2,6 +2,7 @@ import {Controller, Get, Post, Put, Delete, Body, Param, Query, HttpCode, HttpSt
 import { TeamsService } from "./teams.service";
 import { CreateTeamDto } from "./dto/CreateTeam.dto";
 import { UpdateTeamDto } from "./dto/UpdateTeam.dto";
+import { UpdateTeamImageDto } from "./dto/UpdateTeamImage.dto";
 import { TeamIdDto } from "./dto/TeamId.dto";
 
 @Controller("teams")
@@ -14,7 +15,7 @@ export class TeamsController {
     return await this.teamsService.createTeam(createTeamDto);
   }
 
-   // Actualizar equipo (Nombre e Imagen)
+   // Actualizar equipo
   @Put(":_id")
   async updateTeam(
     @Param() params: TeamIdDto,
@@ -26,6 +27,21 @@ export class TeamsController {
   @Delete(":_id")
   async deleteTeam(@Param() params: TeamIdDto) {
     return await this.teamsService.deleteTeam(params);
+  }
+
+  // Actualizar solo la imagen del equipo
+  @Put(":_id/image")
+  async updateTeamImage(
+    @Param() params: TeamIdDto,
+    @Body() updateTeamImageDto: UpdateTeamImageDto
+  ) {
+    return await this.teamsService.updateTeamImage(params, updateTeamImageDto);
+  }
+
+  // Eliminar imagen del equipo
+  @Delete(":_id/image")
+  async deleteTeamImage(@Param() params: TeamIdDto) {
+    return await this.teamsService.deleteTeamImage(params);
   }
 
   @Get("name/:name")
@@ -41,6 +57,18 @@ export class TeamsController {
   @Get(":_id")
   async findTeamById(@Param() params: TeamIdDto) {
     return await this.teamsService.findTeamById(params);
+  }
+
+  // Obtener imagen del equipo
+  @Get(":_id/image")
+  async getTeamImage(@Param() params: TeamIdDto) {
+    return await this.teamsService.getTeamImage(params);
+  }
+
+  // Buscar equipos por imagen
+  @Get("image/:_idImg")
+  async findTeamsByImage(@Param("_idImg") _idImg: string) {
+    return await this.teamsService.findTeamsByImage(_idImg);
   }
 
   // Buscar miembros de un equipo

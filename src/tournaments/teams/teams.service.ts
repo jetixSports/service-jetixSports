@@ -4,6 +4,7 @@ import {
 import { TeamsRepository } from "./teams.repository";
 import { CreateTeamDto } from "./dto/CreateTeam.dto";
 import { UpdateTeamDto } from "./dto/UpdateTeam.dto";
+import { UpdateTeamImageDto } from "./dto/UpdateTeamImage.dto";
 import { TeamIdDto } from "./dto/TeamId.dto";
 import { AddMemberDto } from "./dto/AddMember.dto";
 
@@ -43,13 +44,45 @@ export class TeamsService {
     return { statusCode: 200, message: "Equipo actualizado con éxito" };
   }
 
+  // Actualizar solo la imagen del equipo
+  async updateTeamImage({ _id }: TeamIdDto, updateTeamImageDto: UpdateTeamImageDto) {
+    const existingTeam = await this.teamsRepository.existingTeamId(_id);
+    if (!existingTeam) {
+      throw new NotFoundException("Equipo no encontrado");
+    }
+
+    const updateResult = await this.teamsRepository.updateTeamImage(_id, updateTeamImageDto);
+    if (updateResult.matchedCount < 1) {
+      throw new NotFoundException("Equipo no encontrado para actualizar imagen");
+    }
+    if (updateResult.modifiedCount < 1) {
+      throw new BadRequestException("No se realizaron cambios en la imagen del equipo");
+    }
+    return { statusCode: 200, message: "Imagen del equipo actualizada con éxito" };
+  }
+
   // Eliminar equipo
   async deleteTeam({ _id }: TeamIdDto) {
     const deleteResult = await this.teamsRepository.deleteTeam(_id);
     if (deleteResult.matchedCount < 1) {
       throw new NotFoundException("Equipo no encontrado");
     }
+    if (deleteResult.modifiedCount < 1) {
+      throw new BadRequestException("No se pudo eliminar el equipo");
+    }
     return { statusCode: 200, message: "Equipo eliminado con éxito" };
+  }
+
+  // Eliminar imagen del equipo
+  async deleteTeamImage({ _id }: TeamIdDto) {
+    const deleteResult = await this.teamsRepository.deleteTeamImage(_id);
+    if (deleteResult.matchedCount < 1) {
+      throw new NotFoundException("Equipo no encontrado para eliminar imagen");
+    }
+    if (deleteResult.modifiedCount < 1) {
+      throw new BadRequestException("No se pudo eliminar la imagen del equipo");
+    }
+    return { statusCode: 200, message: "Imagen del equipo eliminada con éxito" };
   }
 
   //Busquedas
@@ -67,6 +100,33 @@ export class TeamsService {
       throw new NotFoundException("Equipo no encontrado");
     }
     return team;
+  }
+
+   async findTeamsByImage(_idImg: string) {
+    const team = await this.teamsRepository.findTeamsByImage(_idImg);
+    if (!team) {
+      throw new NotFoundException("Equipo no encontrado");
+    }
+    return team;
+  }
+
+  // Obtener imagen del equipo
+  async getTeamImage({ _id }: TeamIdDto) {
+    const existingTeam = await this.teamsRepository.existingTeamId(_id);
+    if (!existingTeam) {
+      throw new NotFoundException("Equipo no encontrado");
+    }
+
+    const imageData = await this.teamsRepository.getTeamImage(_id);
+    if (!imageData) {
+      throw new NotFoundException("Imagen del equipo no encontrada");
+    }
+
+    return {
+      statusCode: 200,
+      message: "Imagen del equipo obtenida con éxito",
+      data: imageData
+    };
   }
 
   async findAllTeams(filters: any = {}) {
@@ -103,7 +163,6 @@ export class TeamsService {
     };
   }
 
-
   async findTeamsByMember(memberId: string) {
     return await this.teamsRepository.findTeamsByMember(memberId);
   }
@@ -125,5 +184,4 @@ export class TeamsService {
     const updateState=await this.teamsRepository.addMember(addMemberDto._idTeam, addMemberDto._idUser)
     return {statusCode:200,message:"miembro del equipo agregado con exito"}
     }
-
 }

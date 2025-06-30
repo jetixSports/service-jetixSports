@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsArray, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsEnum, IsUrl } from 'class-validator';
 
 export class UpdateTeamDto {
   @IsString()
@@ -8,6 +8,12 @@ export class UpdateTeamDto {
   @IsString()
   @IsOptional()
   _idImg?: string;
+
+  @IsString()
+  @IsOptional()
+  @IsUrl({}, { message: 'La URL de la imagen debe ser válida' })
+  img?: string;
+
 
   @IsString()
   @IsOptional()

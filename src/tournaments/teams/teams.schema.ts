@@ -9,6 +9,9 @@ export class Teams extends Document {
   @Prop({ type: String, default: "" })
   _idImg: string;
 
+  @Prop({ type: String, default: "" })
+  img: string;
+
   @Prop({ type: String, })
   _idLeader: string;
 
