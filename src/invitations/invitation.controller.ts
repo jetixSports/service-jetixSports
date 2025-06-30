@@ -18,12 +18,12 @@ export class InvitationsController {
     return this.invitationsService.getInvitations(findInvitationDto);
   }
 
-  @Patch('accept/')
+  @Post('accept')
   accept(@Body() findInvitationDto: FindInvitationDto){
     return this.invitationsService.changeInvitation(findInvitationDto,'accepted');
   }
 
-  @Patch('deny/:id')
+  @Post('deny')
   deny(@Body() findInvitationDto: FindInvitationDto) {
     return this.invitationsService.changeInvitation(findInvitationDto,'denied');
   }

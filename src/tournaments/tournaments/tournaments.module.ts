@@ -5,6 +5,7 @@ import { TournamentsRepository } from './tournaments.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Tournaments, TournamentsSchema } from './tournaments.schema';
 import { ImagesModule } from 'src/utils/images/images.module';
+import { TeamsModule } from '../teams/teams.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { ImagesModule } from 'src/utils/images/images.module';
       [{ name: Tournaments.name, schema: TournamentsSchema }],
       process.env.TOURNAMENTS_DB
     ),
-    ImagesModule
+    ImagesModule,
+    TeamsModule
 
   ],
   controllers: [TournamentsController],

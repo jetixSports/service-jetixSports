@@ -13,7 +13,14 @@ export class TeamsRepository {
   ) {}
 
   async createTeam(createTeamDto: CreateTeamDto) {
-    const newTeam = new this.teamsModel(createTeamDto);
+    const data={...createTeamDto}
+    const leaderIsMember=createTeamDto.members?.includes(createTeamDto._idLeader)??false
+    if(!leaderIsMember){
+      if(!Array.isArray(data.members))
+        data.members=[]
+      data.members?.push(data._idLeader)
+    }
+    const newTeam = new this.teamsModel(data);
     const team = await newTeam.save();
     return {
       statusCode: 201,
@@ -68,5 +75,13 @@ export class TeamsRepository {
   async getTeamMembers(_id: string) {
     const team = await this.teamsModel.findById(_id, { members: 1 });
     return team ? team.members : [];
+  }
+  async existMemberTeam(_id:string,_idMember:string){
+    const countMember=await this.teamsModel.countDocuments({_id,members:_idMember})
+    return countMember>0
+  }
+
+  async addMember(_id:string,_idMember:string){
+    return await this.teamsModel.updateOne({_id},{$push:{members:_idMember}})
   }
 }

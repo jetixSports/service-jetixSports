@@ -5,13 +5,14 @@ import { CreateTournamentDto } from "./dto/create-tournaments.dto";
 import { Tournaments } from "./tournaments.schema";
 import { AddPayTeamTournamentDto } from "./dto/add-pay-team-tournament.dto";
 import { VerifyPayTeamTournamentDto } from "./dto/verify-pay-team-tournament.dto";
+import { AddTeamDto } from "./dto/add-team.dto";
 
 @Injectable()
 export class TournamentsRepository {
   constructor(
     @InjectModel(Tournaments.name, process.env.TOURNAMENTS_DB)
     private tournamentsModel: Model<Tournaments>
-  ) {}
+  ) { }
   async create(createTournamentDto: CreateTournamentDto) {
     const newHistory = new this.tournamentsModel(createTournamentDto);
     const savedHistory = await newHistory.save();
@@ -66,5 +67,34 @@ export class TournamentsRepository {
       },
       { $unset: { ["teams.$._idPayments"]: "" } }
     );
+  }
+  async addPay(_idPayment: string, _idTournament: string) {
+    return await this.tournamentsModel.updateOne({ _id: _idTournament }, { $push: { _idPayments: _idPayment } })
+  }
+  async addTeam(_idTournament: string, addTeamDto: AddTeamDto) {
+    console.log(addTeamDto);
+    
+    return await this.tournamentsModel.updateOne({ _id: _idTournament }, { $set: { teams: { ...addTeamDto, status: "pending" } } })
+  }
+  async countTeamsTournament(_idTournament: string) {
+    const teams = await this.tournamentsModel.aggregate([
+      {
+        $match: {
+          _id: _idTournament
+        }
+      },
+      {
+        $project: {
+          teams: {
+            $filter: {
+              input: "$teams",
+              as: "item",
+              cond: { $ne: ["$$item.status", "cancel"] }
+            }
+          }
+        }
+      }
+    ])
+    return teams.length > 0 ? teams[0].teams.length : 0
   }
 }

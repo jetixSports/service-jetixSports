@@ -6,13 +6,13 @@ export class Invitation extends Document {
     @Prop({ required: true,  })
     teamId: string;
 
-    @Prop({ required: true, default: true })
+    @Prop({ required: true,})
     userId: string;
 
-    @Prop({ required: true, default: [] })
-    invitorId: string[];
+    @Prop({ required: true,})
+    invitorId: string;
 
-    @Prop({ required: true, default: [] })
+    @Prop({ required: true, default: 'pending' })
      status: 'pending' | 'accepted' | 'denied';
 
 }

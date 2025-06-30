@@ -57,7 +57,7 @@ export class Tournaments extends Document {
             _idTeam: { type: String, required: true },
             status: { type: String, required: true, enum: ["verified", "pending", "cancel"], default: "pending" },
             playersMembers: { type: [String], default: [] },
-            _idPayments: { type: String, required: true },
+            _idPayments: { type: String,},
             _idLeader: { type: String, required: true },
         }],
         default: []

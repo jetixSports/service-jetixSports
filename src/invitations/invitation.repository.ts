@@ -15,7 +15,8 @@ export class InvitationsRepository {
     private invitationModel: Model<Invitation>
   ) {}
   async find(findInvitationDto:FindInvitationDto) {
-    return await this.invitationModel.find(findInvitationDto);
+    const data=JSON.parse(JSON.stringify(findInvitationDto))    
+    return await this.invitationModel.find(data);
   }
 
   // Método para guardar una nueva invitación
@@ -34,6 +35,7 @@ export class InvitationsRepository {
     return countInvitation>0
   }
   async changeInvitation(findInvitationDto:FindInvitationDto,status:string){
-    return await this.invitationModel.updateOne(findInvitationDto,{$set:{status}})
+    const data=JSON.parse(JSON.stringify(findInvitationDto))    
+    return await this.invitationModel.updateOne(data,{$set:{status}})
   }
 }

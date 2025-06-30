@@ -1,13 +1,15 @@
-import {Injectable, NotFoundException, ConflictException, BadRequestException,
+import {
+  Injectable, NotFoundException, ConflictException, BadRequestException, ForbiddenException,
 } from "@nestjs/common";
 import { TeamsRepository } from "./teams.repository";
 import { CreateTeamDto } from "./dto/CreateTeam.dto";
 import { UpdateTeamDto } from "./dto/UpdateTeam.dto";
 import { TeamIdDto } from "./dto/TeamId.dto";
+import { AddMemberDto } from "./dto/AddMember.dto";
 
 @Injectable()
 export class TeamsService {
-  constructor(private readonly teamsRepository: TeamsRepository) {}
+  constructor(private readonly teamsRepository: TeamsRepository) { }
 
   async createTeam(createTeamDto: CreateTeamDto) {
     const existingTeam = await this.teamsRepository.existingTeamName(createTeamDto.name);
@@ -113,5 +115,15 @@ export class TeamsService {
   async existingTeamId(_id: string) {
     return await this.teamsRepository.existingTeamId(_id);
   }
+  async addMember(addMemberDto: AddMemberDto) {
+    const existTeam = await this.existingTeamId(addMemberDto._idTeam)
+    if (!existTeam)
+      throw new NotFoundException("El equipo no existe")
+    const existMember = await this.teamsRepository.existMemberTeam(addMemberDto._idTeam, addMemberDto._idUser)
+    if (existMember)
+      throw new ForbiddenException("Ya te encuentras en este equipo")
+    const updateState=await this.teamsRepository.addMember(addMemberDto._idTeam, addMemberDto._idUser)
+    return {statusCode:200,message:"miembro del equipo agregado con exito"}
+    }
 
 }

@@ -34,6 +34,10 @@ export class InvitationsService {
       throw new NotFoundException("Invitacion no encontrada")
     if(updateState.modifiedCount==0)
       throw new NotFoundException("Invitacion no modificada")
+    if(status=="accepted"){
+      const invitationData=await this.invitationsRepository.find(findInvitationDto)
+      await this.teamsService.addMember({_idTeam:invitationData[0].teamId,_idUser:invitationData[0].userId})
+    }
     return {statusCode:200,message:'Invitacion actualizada con exito',data:{}};
   }
 }
