@@ -9,6 +9,7 @@ import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { UpdateUserDto } from "./dto/UpdateUser.dto";
 import { SaveUserDto } from "./dto/SaveUser.dto";
+import { FilterUsersDto } from "./dto/FilterUsers.dto";
 
 @Injectable()
 export class UsersRepository {
@@ -80,5 +81,13 @@ export class UsersRepository {
   }
   async cleanSession(_id:string){
     return await this.usersModel.updateOne({_id},{$set:{tokenSession:''}})
+  }
+  async filter(filterUsersDto:FilterUsersDto){
+    const data=JSON.parse(JSON.stringify(filterUsersDto.filter))
+    const regexData=Object.entries(data).reduce((acc,item)=>{
+      acc[item[0]]={ $regex: item[1],$options: 'i' }
+      return acc
+    },{})
+    return await this.usersModel.find({status:{$ne:'delete'},...regexData},{firstName:1,lastName:1,email:1,role:1,_id:1,username:1}).skip((filterUsersDto.pagination-1)*20).limit(20)
   }
 }

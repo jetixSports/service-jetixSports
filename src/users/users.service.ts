@@ -8,6 +8,7 @@ import { EmailDto } from "./dto/Email.dto";
 import { UpdateUserDto } from "./dto/UpdateUser.dto";
 import { SaveUserDto } from "./dto/SaveUser.dto";
 import { UsernameDto } from "./dto/Username.dto";
+import { FilterUsersDto } from "./dto/FilterUsers.dto";
 
 @Injectable()
 export class UsersService {
@@ -88,12 +89,17 @@ export class UsersService {
   }
   async cleanSession(_id: string) {
     const logoutState = await this.usersRepository.cleanSession(_id)
-    if(logoutState.matchedCount==0)
+    if (logoutState.matchedCount == 0)
       throw new NotFoundException('Usuario no encontrado')
-    if(logoutState.matchedCount==0)
+    if (logoutState.matchedCount == 0)
       throw new BadRequestException('Usuario ya se encontraba sin session')
-    return {statusCode:200,messaga:"Sesion eliminada con exito"}
+    return { statusCode: 200, messaga: "Sesion eliminada con exito" }
   }
-
+  async filter(filterUsersDto: FilterUsersDto) {
+    const users= await this.usersRepository.filter(filterUsersDto)
+    if(users.length==0)
+      throw new NotFoundException("Usuarios no encontrados")
+    return {statusCode:200,message:"Usuarios encontrados con exito",data:users}
+  }
 }
 

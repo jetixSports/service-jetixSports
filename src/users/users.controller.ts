@@ -18,6 +18,7 @@ import { EmailDto } from "./dto/Email.dto";
 import { UpdateUserDto } from "./dto/UpdateUser.dto";
 import { SaveUserDto } from "./dto/SaveUser.dto";
 import { UsernameDto } from "./dto/Username.dto";
+import { FilterUsersDto } from "./dto/FilterUsers.dto";
 
 @Controller("users")
 export class UsersController {
@@ -43,8 +44,13 @@ export class UsersController {
     return this.usersService.saveUser(createUserDto);
   }
 
-  // **2. Ver Todos los Usuarios (Read All)**
-  // GET /users
+   @Post('filter')
+  async filter(@Body(ValidationPipe) filterUsersDto: FilterUsersDto) {
+    return this.usersService.filter(filterUsersDto);
+  }
+
+
+
   @Get()
   async findAll() {
     return this.usersService.findAll();
