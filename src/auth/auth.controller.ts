@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, ValidationPipe } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Auth } from "src/decorators/auth/auth.decorator";
 import { LoginDto } from "./dto/Login.dto";
@@ -17,5 +17,11 @@ export class AuthController {
   @Post("signUp")
   signUp(@Req() request: Request, @Body(ValidationPipe) signUpDto: SignUpDto) {
     return this.authService.signIn(signUpDto);
+  }
+
+  @Auth("Auth")
+  @Get("logout")
+  logout(@Req() request: Request) {
+    return this.authService.logout(request.userData?._id+"");
   }
 }
