@@ -21,23 +21,28 @@ export class UsersRepository {
   async findOneByEmail(email: string, ignoreAtt = ["password"]) {
     const options =
       ignoreAtt.length > 0
-        ?  ignoreAtt.reduce(
-              (acc, item) => ({ ...acc, [item]: 0 }),
-              {}
-            )
+        ? ignoreAtt.reduce((acc, item) => ({ ...acc, [item]: 0 }), {})
         : {};
     const user = await this.usersModel.findOne({ email }, options);
     return user;
   }
-  async updateUser(email: string, updateUserDto: UpdateUserDto) {
-    return await this.usersModel.updateOne({ email }, { $set: updateUserDto });
+  async updateUser(updateUserDto: UpdateUserDto) {
+    const { _id, ...data } = updateUserDto;
+    const parseData = JSON.parse(JSON.stringify(data));
+    return await this.usersModel.updateOne({ _id }, { $set: parseData });
+  }
+  async updateTokenSession(email: string, tokenSession: string) {
+    return await this.usersModel.updateOne(
+      { email },
+      { $set: { tokenSession } }
+    );
   }
   async existingEmail(email: string) {
     const countUsers = await this.usersModel.countDocuments({ email });
     return countUsers > 0;
   }
-  
-   async existingId(_id: string) {
+
+  async existingId(_id: string) {
     const countUsers = await this.usersModel.countDocuments({ _id });
     return countUsers > 0;
   }
@@ -69,25 +74,30 @@ export class UsersRepository {
   }
 
   // Método para eliminar un usuario por ID
-  async remove(id: string) {
-    const result = await this.usersModel.deleteOne({ _id: id });
-    if (result.deletedCount === 0) {
-      throw new NotFoundException("Usuario no encontrado");
-    }
-    return {
-      statusCode: 200,
-      message: "Usuario con ID ${id} eliminado con éxito,"
-    };
+  async remove(_id: string) {
+    return await this.usersModel.updateOne(
+      { _id },
+      { $set: { status: "delete" } }
+    );
   }
-  async cleanSession(_id:string){
-    return await this.usersModel.updateOne({_id},{$set:{tokenSession:''}})
+  async cleanSession(_id: string) {
+    return await this.usersModel.updateOne(
+      { _id },
+      { $set: { tokenSession: "" } }
+    );
   }
-  async filter(filterUsersDto:FilterUsersDto){
-    const data=JSON.parse(JSON.stringify(filterUsersDto.filter))
-    const regexData=Object.entries(data).reduce((acc,item)=>{
-      acc[item[0]]={ $regex: item[1],$options: 'i' }
-      return acc
-    },{})
-    return await this.usersModel.find({status:{$ne:'delete'},...regexData},{firstName:1,lastName:1,email:1,role:1,_id:1,username:1}).skip((filterUsersDto.pagination-1)*20).limit(20)
+  async filter(filterUsersDto: FilterUsersDto) {
+    const data = JSON.parse(JSON.stringify(filterUsersDto.filter));
+    const regexData = Object.entries(data).reduce((acc, item) => {
+      acc[item[0]] = { $regex: item[1], $options: "i" };
+      return acc;
+    }, {});
+    return await this.usersModel
+      .find(
+        { status: { $ne: "delete" }, ...regexData },
+        { firstName: 1, lastName: 1, email: 1, role: 1, _id: 1, username: 1 }
+      )
+      .skip((filterUsersDto.pagination - 1) * 20)
+      .limit(20);
   }
 }

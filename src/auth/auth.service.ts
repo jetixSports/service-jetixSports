@@ -31,16 +31,16 @@ export class AuthService {
     const isTokenValid = await this.authRepository.validateSessionToken({
       token: user.tokenSession,
       email: user.email,
-      _id: user._id
+      _id: user._id,
     });
     if (isTokenValid)
       throw new UnauthorizedException("Ya posees una sesión activa");
     const generateToken = await this.authRepository.generateToken({
       email: user.email,
       _id: user._id,
-      role:user.role
+      role: user.role,
     });
-    await this.usersService.updateUser(
+    await this.usersService.updateTokenSession(
       { email: user.email },
       { tokenSession: generateToken }
     );
@@ -64,17 +64,19 @@ export class AuthService {
       username: signInDto.username,
     });
     if (existingUsername)
-      throw new ForbiddenException("Ya existe un usuario con este nombre de usuario");
+      throw new ForbiddenException(
+        "Ya existe un usuario con este nombre de usuario"
+      );
     const encryptedPassword = await this.authRepository.encryptPassword(
       signInDto.password
     );
-    const user=await this.usersService.saveUser({
+    const user = await this.usersService.saveUser({
       ...signInDto,
       password: encryptedPassword,
     });
-    return {...user,data:{}}
+    return { ...user, data: {} };
   }
-  async logout(_id:string){
-    return await this.usersService.cleanSession(_id)
+  async logout(_id: string) {
+    return await this.usersService.cleanSession(_id);
   }
 }

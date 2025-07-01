@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post, Req, ValidationPipe } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  ValidationPipe,
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Auth } from "src/decorators/auth/auth.decorator";
 import { LoginDto } from "./dto/Login.dto";
@@ -22,6 +29,6 @@ export class AuthController {
   @Auth("Auth")
   @Get("logout")
   logout(@Req() request: Request) {
-    return this.authService.logout(request.userData?._id+"");
+    return this.authService.logout(request.userData?._id + "");
   }
 }
