@@ -6,6 +6,7 @@ import { Tournaments } from "./tournaments.schema";
 import { AddPayTeamTournamentDto } from "./dto/add-pay-team-tournament.dto";
 import { VerifyPayTeamTournamentDto } from "./dto/verify-pay-team-tournament.dto";
 import { AddTeamDto } from "./dto/add-team.dto";
+import { FilterTournamentDto } from "./dto/filter-tournament.dto";
 
 @Injectable()
 export class TournamentsRepository {
@@ -72,8 +73,6 @@ export class TournamentsRepository {
     return await this.tournamentsModel.updateOne({ _id: _idTournament }, { $push: { _idPayments: _idPayment } })
   }
   async addTeam(_idTournament: string, addTeamDto: AddTeamDto) {
-    console.log(addTeamDto);
-    
     return await this.tournamentsModel.updateOne({ _id: _idTournament }, { $set: { teams: { ...addTeamDto, status: "pending" } } })
   }
   async countTeamsTournament(_idTournament: string) {
@@ -96,5 +95,10 @@ export class TournamentsRepository {
       }
     ])
     return teams.length > 0 ? teams[0].teams.length : 0
+  }
+
+  async filter(filterTournamentDto:FilterTournamentDto){
+    const data=JSON.parse(JSON.stringify(filterTournamentDto))
+    return await this.tournamentsModel.find(data)
   }
 }

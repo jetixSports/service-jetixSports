@@ -11,6 +11,7 @@ import { AddPayTeamTournamentDto } from "./dto/add-pay-team-tournament.dto";
 import { VerifyPayTeamTournamentDto } from "./dto/verify-pay-team-tournament.dto";
 import { InscribeTeamDto } from "./dto/inscribe-team.dto";
 import { TeamsService } from "../teams/teams.service";
+import { FilterTournamentDto } from "./dto/filter-tournament.dto";
 
 @Injectable()
 export class TournamentsService {
@@ -109,5 +110,12 @@ export class TournamentsService {
       throw new BadRequestException("No hay espacio en este torneo")
     const updateState=await this.tournamentsRepository.addTeam(inscribeTeamDto._idTournament,{_idLeader:team._idLeader,_idTeam:inscribeTeamDto._idTeam,playersMembers:inscribeTeamDto.playersMembers})
   return {statusCode:200,message:"Inscripcion al torneo con exito"}
+  }
+
+  async filter(filterTournamentDto:FilterTournamentDto){
+    const findTournament=await this.tournamentsRepository.filter(filterTournamentDto)
+    if(findTournament.length==0)
+      throw new NotFoundException("Torneos no encontrados")
+    return {statusCode:200,message:'Torneo encontrado con exito',data:findTournament}
   }
 }
