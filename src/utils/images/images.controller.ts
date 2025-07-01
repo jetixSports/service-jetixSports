@@ -3,7 +3,7 @@ import { ImagesService } from './images.service';
 import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-
+import { Response } from 'express'; 
 @Controller('images')
 export class ImagesController {
   constructor(private readonly imagesService: ImagesService) { }
@@ -22,8 +22,10 @@ export class ImagesController {
     @Res({ passthrough: true }) res: Response
   ) {
     try {
-      const { stream } = await this.imagesService.getImage(type,id);
-      return new StreamableFile(stream.createReadStream());
+      const { fileImage,extends:imgExte } = await this.imagesService.getImage(type,id);
+       res.set({
+      'Content-Type': 'image/'+imgExte, })
+      return new StreamableFile(fileImage.createReadStream());
     } catch (error) {
       throw error;
     }

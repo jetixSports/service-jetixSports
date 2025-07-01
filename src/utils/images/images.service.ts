@@ -8,7 +8,6 @@ import { NotFoundError } from 'rxjs';
 @Injectable()
 export class ImagesService {
   constructor(private readonly imagesRepository: ImagesRepository) { }
-
   async create(_idUser: string, createImageDto: CreateImageDto, file: Express.Multer.File) {
     try {
       const isValid = this.imagesRepository.validateImage(file);
@@ -35,6 +34,7 @@ export class ImagesService {
     const fileImage=await this.imagesRepository.getImage(type,id)
     if(!fileImage)
       throw new NotFoundException('Imagen no encontrada')
-    return fileImage
+    
+    return {fileImage:fileImage.stream,extends:fileImage.extends}
   }
 }

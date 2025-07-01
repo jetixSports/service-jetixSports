@@ -67,7 +67,8 @@ export class ImagesRepository {
             const filePath = path.join(uploadsDir, foundFile);
             const fileHandle = await fs.open(filePath, 'r');
             return {
-                stream: fileHandle
+                stream: fileHandle,
+                extends:filePath.split('.')[1]
             };
         } catch (error) {
             return false
