@@ -54,6 +54,13 @@ export class CreateTournamentDto {
     quotas: number;
 
     @ApiProperty()
+    @IsNumber()
+    @Min(1)
+    @Transform(({value})=>Number(value))
+    amount: number;
+
+
+    @ApiProperty()
     @Min(1)
     @IsNumber()
     @Transform(({value})=>Number(value))

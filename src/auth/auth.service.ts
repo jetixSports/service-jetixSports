@@ -74,4 +74,7 @@ export class AuthService {
     });
     return {...user,data:{}}
   }
+  async logout(_id:string){
+    return await this.usersService.cleanSession(_id)
+  }
 }

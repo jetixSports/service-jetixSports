@@ -78,5 +78,7 @@ export class UsersRepository {
       message: "Usuario con ID ${id} eliminado con éxito,"
     };
   }
-  
+  async cleanSession(_id:string){
+    return await this.usersModel.updateOne({_id},{$set:{tokenSession:''}})
+  }
 }

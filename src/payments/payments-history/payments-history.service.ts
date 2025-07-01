@@ -28,6 +28,8 @@ export class PaymentsHistoryService {
     const team = dataTournament.data.teams.find(
       (team) => team._idLeader == createPaymentHistoryDto._idUser
     );
+    if(dataTournament.data.amount>createPaymentHistoryDto.amount)
+      throw new ForbiddenException('El pago no cumple con el precio requerido')
     if (!team)
       throw new ForbiddenException("No eres el lider de ningun equipo");
     if (team._idPayments)

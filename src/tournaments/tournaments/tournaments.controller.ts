@@ -20,8 +20,6 @@ export class TournamentsController {
   }
   @Post("filter")
   filter(@Body() filterTournamentDto: FilterTournamentDto) {
-    console.log(123123);
-    
     return this.tournamentsService.filter(filterTournamentDto)
   }
 }

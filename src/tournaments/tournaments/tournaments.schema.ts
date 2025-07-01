@@ -74,6 +74,9 @@ export class Tournaments extends Document {
     quotas: number;
 
     @Prop({ required: true, type: Number })
+    amount: number;
+
+    @Prop({ required: true, type: Number })
     teamSpace: number;
 
     @Prop({ required: true, type: Date })

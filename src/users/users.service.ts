@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
@@ -10,7 +11,7 @@ import { UsernameDto } from "./dto/Username.dto";
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(private readonly usersRepository: UsersRepository) { }
 
   // Buscar un usuario por email
   async findOneByEmail(emailDto: EmailDto, ignoreAtt?: string[]) {
@@ -42,8 +43,8 @@ export class UsersService {
   async existingEmail(emailDto: EmailDto) {
     return await this.usersRepository.existingEmail(emailDto.email);
   }
-  
-  async existingId({ _id }: {_id:string}) {
+
+  async existingId({ _id }: { _id: string }) {
     return await this.usersRepository.existingId(_id);
   }
 
@@ -72,20 +73,27 @@ export class UsersService {
   }
 
   // Eliminar un usuario por ID
-async remove(id: string) {
-  const deletedUser = await this.usersRepository.remove(id);
+  async remove(id: string) {
+    const deletedUser = await this.usersRepository.remove(id);
 
-  // Si no se eliminó ningún usuario, lanzar excepción
-  if (!deletedUser) {
-    throw new NotFoundException("User with ID ${id} not found.");
+    // Si no se eliminó ningún usuario, lanzar excepción
+    if (!deletedUser) {
+      throw new NotFoundException("User with ID ${id} not found.");
+    }
+
+    return {
+      statusCode: 200,
+      message: "User with ID ${id} successfully deleted.",
+    };
+  }
+  async cleanSession(_id: string) {
+    const logoutState = await this.usersRepository.cleanSession(_id)
+    if(logoutState.matchedCount==0)
+      throw new NotFoundException('Usuario no encontrado')
+    if(logoutState.matchedCount==0)
+      throw new BadRequestException('Usuario ya se encontraba sin session')
+    return {statusCode:200,messaga:"Sesion eliminada con exito"}
   }
 
-  return {
-    statusCode: 200,
-    message: "User with ID ${id} successfully deleted.",
-  };
-}
-
-  
 }
 
