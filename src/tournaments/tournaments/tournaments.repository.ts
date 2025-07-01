@@ -101,4 +101,11 @@ export class TournamentsRepository {
     const data=JSON.parse(JSON.stringify(filterTournamentDto))
     return await this.tournamentsModel.find(data)
   }
+  async addUsersTeam(_id:string,users:string[]){
+    return await this.tournamentsModel.updateOne({_id}, {
+    $addToSet: { 
+      _idUsers: { $each: users } 
+    }
+  })
+  }
 }
