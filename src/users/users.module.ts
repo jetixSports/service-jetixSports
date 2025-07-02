@@ -6,9 +6,11 @@ import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Users, UsersSchema } from "./users.schema";
+import { ImagesModule } from "src/utils/images/images.module";
 
 @Module({
   imports: [
+    ImagesModule,
     MongooseModule.forFeature(
       [{ name: Users.name, schema: UsersSchema }],
       process.env.AUTH_DB

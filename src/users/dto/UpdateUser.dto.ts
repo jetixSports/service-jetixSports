@@ -24,6 +24,7 @@ export class UpdateUserDto {
   @MaxLength(50)
   lastName: string;
 
+  @IsOptional()
   @IsString()
-  role: string;
+  role?: string;
 }

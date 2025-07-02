@@ -100,4 +100,7 @@ export class UsersRepository {
       .skip((filterUsersDto.pagination - 1) * 20)
       .limit(20);
   }
+  async updateImage(_id:string,_idImg:string){
+    return await this.usersModel.updateOne({_id},{$set:{_idImg}})
+  }
 }

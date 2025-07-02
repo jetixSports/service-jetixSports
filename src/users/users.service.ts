@@ -9,10 +9,13 @@ import { UpdateUserDto } from "./dto/UpdateUser.dto";
 import { SaveUserDto } from "./dto/SaveUser.dto";
 import { UsernameDto } from "./dto/Username.dto";
 import { FilterUsersDto } from "./dto/FilterUsers.dto";
+import { ImagesService } from "src/utils/images/images.service";
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(private readonly usersRepository: UsersRepository,
+    private readonly imagesService: ImagesService
+  ) { }
 
   // Buscar un usuario por email
   async findOneByEmail(emailDto: EmailDto, ignoreAtt?: string[]) {
@@ -129,4 +132,20 @@ export class UsersService {
       data: users,
     };
   }
+  async changeImage(file: Express.Multer.File, _id: string) {
+    const saveImage = await this.imagesService.create(
+      _id,
+      { type: "profile" },
+      file
+    );
+    const updateImage=await this.usersRepository.updateImage(_id,saveImage.data._id+"")
+    if (updateImage.matchedCount == 0)
+      throw new NotFoundException("Usuario no encontrado");
+   
+    return { statusCode: 200, message: "Usuario actualizado con exito" ,data:{_idImg:saveImage.data._id}};
+  }
+
+
 }
+
+

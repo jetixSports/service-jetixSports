@@ -7,6 +7,10 @@ import {
   Delete,
   Param,
   NotFoundException,
+  Put,
+  UseInterceptors,
+  UploadedFile,
+  Req,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { EmailDto } from "./dto/Email.dto";
@@ -14,6 +18,9 @@ import { UpdateUserDto } from "./dto/UpdateUser.dto";
 import { SaveUserDto } from "./dto/SaveUser.dto";
 import { UsernameDto } from "./dto/Username.dto";
 import { FilterUsersDto } from "./dto/FilterUsers.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { Auth } from "src/decorators/auth/auth.decorator";
+import { Request } from "express";
 
 @Controller("users")
 export class UsersController {
@@ -57,9 +64,19 @@ export class UsersController {
   async updateUser(@Body(ValidationPipe) updateUserDto: UpdateUserDto) {
     return this.usersService.updateUser(updateUserDto);
   }
-
+  
   @Delete(":id")
   async remove(@Param("id") id: string) {
     return this.usersService.remove(id);
   }
+
+  @Auth("Auth")
+  @Put('changeImage')
+    @UseInterceptors(FileInterceptor('file'))
+    changeImage(
+      @Req() request: Request,
+      @UploadedFile() file: Express.Multer.File,
+    ) {
+      return this.usersService.changeImage(file, request.userData?._id??'')
+    }
 }
