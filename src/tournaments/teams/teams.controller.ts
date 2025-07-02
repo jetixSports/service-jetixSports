@@ -1,18 +1,21 @@
-import {Controller, Get, Post, Put, Delete, Body, Param, Query, HttpCode, HttpStatus} from "@nestjs/common";
+import {Controller, Get, Post, Put, Delete, Body, Param, Query, HttpCode, HttpStatus, UploadedFile, UseInterceptors} from "@nestjs/common";
 import { TeamsService } from "./teams.service";
 import { CreateTeamDto } from "./dto/CreateTeam.dto";
 import { UpdateTeamDto } from "./dto/UpdateTeam.dto";
 import { UpdateTeamImageDto } from "./dto/UpdateTeamImage.dto";
 import { TeamIdDto } from "./dto/TeamId.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("teams")
 export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async createTeam(@Body() createTeamDto: CreateTeamDto) {
-    return await this.teamsService.createTeam(createTeamDto);
+  @UseInterceptors(FileInterceptor('file'))
+  async createTeam(
+   @UploadedFile() file: Express.Multer.File,
+    @Body() createTeamDto: CreateTeamDto) {
+    return await this.teamsService.createTeam(createTeamDto,file);
   }
 
    // Actualizar equipo

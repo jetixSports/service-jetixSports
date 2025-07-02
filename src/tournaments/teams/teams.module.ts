@@ -4,9 +4,11 @@ import { TeamsService } from "./teams.service";
 import { TeamsRepository } from "./teams.repository";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Teams, TeamsSchema } from "./teams.schema";
+import { ImagesModule } from "src/utils/images/images.module";
 
 @Module({
   imports: [
+    ImagesModule,
     MongooseModule.forFeature(
       [{ name: Teams.name, schema: TeamsSchema }],
       process.env.TOURNAMENTS_DB

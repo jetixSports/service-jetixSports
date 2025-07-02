@@ -7,17 +7,26 @@ import { UpdateTeamDto } from "./dto/UpdateTeam.dto";
 import { UpdateTeamImageDto } from "./dto/UpdateTeamImage.dto";
 import { TeamIdDto } from "./dto/TeamId.dto";
 import { AddMemberDto } from "./dto/AddMember.dto";
+import { ImagesService } from "src/utils/images/images.service";
 
 @Injectable()
 export class TeamsService {
-  constructor(private readonly teamsRepository: TeamsRepository) { }
+  constructor(private readonly teamsRepository: TeamsRepository,
+    private readonly imagesService: ImagesService
+  ) { }
 
-  async createTeam(createTeamDto: CreateTeamDto) {
+  async createTeam(createTeamDto: CreateTeamDto,file:Express.Multer.File) {
     const existingTeam = await this.teamsRepository.existingTeamName(createTeamDto.name);
     if (existingTeam) {
       throw new ConflictException("Ya existe un equipo con este nombre");
     }
-    return await this.teamsRepository.createTeam(createTeamDto);
+     const saveImage = await this.imagesService.create(
+      createTeamDto._idLeader,
+      { type: "tournaments" },
+      file
+    );
+    const newTeam=await this.teamsRepository.createTeam(createTeamDto,saveImage.data._id+"");
+    return {statusCode:200,message:"Equipo creado con exito"}
   }
 
   // Actualizar equipo

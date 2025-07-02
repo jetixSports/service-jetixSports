@@ -13,8 +13,8 @@ export class TeamsRepository {
     private teamsModel: Model<Teams>
   ) {}
 
-  async createTeam(createTeamDto: CreateTeamDto) {
-    const data={...createTeamDto}
+  async createTeam(createTeamDto: CreateTeamDto,_idImg:string) {
+    const data={...createTeamDto,_idImg}
     const leaderIsMember=createTeamDto.members?.includes(createTeamDto._idLeader)??false
     if(!leaderIsMember){
       if(!Array.isArray(data.members))
