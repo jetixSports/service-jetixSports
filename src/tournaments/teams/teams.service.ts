@@ -102,7 +102,7 @@ export class TeamsService {
     return team;
   }
 
-   async findTeamsByImage(_idImg: string) {
+  async findTeamsByImage(_idImg: string) {
     const team = await this.teamsRepository.findTeamsByImage(_idImg);
     if (!team) {
       throw new NotFoundException("Equipo no encontrado");
@@ -164,7 +164,11 @@ export class TeamsService {
   }
 
   async findTeamsByMember(memberId: string) {
-    return await this.teamsRepository.findTeamsByMember(memberId);
+    const teams = await this.teamsRepository.findTeamsByMember(memberId);
+    if (teams.length == 0) {
+      throw new NotFoundException("No se encontro ningun equipo");
+    }
+    return {statusCode:200,message:"Equipos encontrados con exito",data:teams}
   }
 
   async existingTeamName(name: string) {
@@ -181,7 +185,7 @@ export class TeamsService {
     const existMember = await this.teamsRepository.existMemberTeam(addMemberDto._idTeam, addMemberDto._idUser)
     if (existMember)
       throw new ForbiddenException("Ya te encuentras en este equipo")
-    const updateState=await this.teamsRepository.addMember(addMemberDto._idTeam, addMemberDto._idUser)
-    return {statusCode:200,message:"miembro del equipo agregado con exito"}
-    }
+    const updateState = await this.teamsRepository.addMember(addMemberDto._idTeam, addMemberDto._idUser)
+    return { statusCode: 200, message: "miembro del equipo agregado con exito" }
+  }
 }

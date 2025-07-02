@@ -98,8 +98,14 @@ export class TournamentsRepository {
   }
 
   async filter(filterTournamentDto:FilterTournamentDto){
-    const data=JSON.parse(JSON.stringify(filterTournamentDto))
-    return await this.tournamentsModel.find(data)
+    const {teams,...dataFilter}=JSON.parse(JSON.stringify(filterTournamentDto))
+    let filter={...dataFilter}
+    if(teams){
+      Object.entries(teams).forEach(([key,value])=>{
+        filter['teams.'+key]=value
+      })
+    }    
+    return await this.tournamentsModel.find(filter)
   }
   async addUsersTeam(_id:string,users:string[]){
     return await this.tournamentsModel.updateOne({_id}, {

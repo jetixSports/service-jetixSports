@@ -20,7 +20,7 @@ class FilterByTeamsDto {
     @IsString()
     @IsOptional()
 
-    _idLeader?: string;
+    _idReferee?: string;
 
     @ApiProperty({ type: String })
     @IsString({ each: true })
