@@ -16,6 +16,7 @@ import { ImagesModule } from './utils/images/images.module';
 import { TeamsModule } from "./tournaments/teams/teams.module";
 import { PaymentsHistoryModule } from './payments/payments-history/payments-history.module';
 import { TournamentsModule } from './tournaments/tournaments/tournaments.module';
+import { SportMatchModule } from "./tournaments/sport_match/sport_match.module";
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { TournamentsModule } from './tournaments/tournaments/tournaments.module'
     TeamsModule,
     PaymentsHistoryModule,
     TournamentsModule,
+    SportMatchModule
   ],
   controllers: [AppController],
   providers: [AppService],

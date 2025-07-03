@@ -30,7 +30,7 @@ export class Tournaments extends Document {
             nRound: { type: Number, required: true },
             _idMatchs: { type: [String], default: [] },
             teamsWinners: { type: [String], default: [] },
-            teamsMatches: { type: [String], default: [] },
+            teamsMatchs: { type: [String], default: [] },
             status: { type: String, required: true, default: "active", enum: ["active", "finished", "delete"] },
         }],
         default: []
@@ -39,7 +39,7 @@ export class Tournaments extends Document {
         nRound: number,
         _idMatchs: string[],
         teamsWinners: string[],
-        teamsMatches: string[],
+        teamsMatchs: string[],
         status: string
     }[];
 

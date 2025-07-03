@@ -52,7 +52,9 @@ export class TeamsRepository {
   async updateTeamImage(_id: string, updateTeamImageDto: UpdateTeamImageDto) {
     return await this.teamsModel.updateOne({ _id }, { $set: updateTeamImageDto });
   }
-
+  async findManyByIds(_id:string[]){
+    return await this.teamsModel.find({_id:{$in:_id}})
+  }
   async deleteTeam(_id: string) {
     return await this.teamsModel.updateOne({ _id },{$set:{status:"delete"}});
   }

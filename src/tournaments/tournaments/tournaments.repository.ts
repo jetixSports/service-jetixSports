@@ -7,6 +7,7 @@ import { AddPayTeamTournamentDto } from "./dto/add-pay-team-tournament.dto";
 import { VerifyPayTeamTournamentDto } from "./dto/verify-pay-team-tournament.dto";
 import { AddTeamDto } from "./dto/add-team.dto";
 import { FilterTournamentDto } from "./dto/filter-tournament.dto";
+import { CreateRoundDto } from "./dto/create-round.dto";
 
 @Injectable()
 export class TournamentsRepository {
@@ -113,5 +114,9 @@ export class TournamentsRepository {
       _idUsers: { $each: users } 
     }
   })
+  }
+  async createRound(_id:string,createRoundDto:CreateRoundDto){
+    return await this.tournamentsModel.updateOne({_id},{$push:{rounds:createRoundDto}}
+    )
   }
 }

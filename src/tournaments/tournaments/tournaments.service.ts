@@ -12,13 +12,16 @@ import { VerifyPayTeamTournamentDto } from "./dto/verify-pay-team-tournament.dto
 import { InscribeTeamDto } from "./dto/inscribe-team.dto";
 import { TeamsService } from "../teams/teams.service";
 import { FilterTournamentDto } from "./dto/filter-tournament.dto";
+import { CreateManySportMatchDto } from "../sport_match/dto/create_many-sport_match.dto";
+import { SportMatchService } from "../sport_match/sport_match.service";
 
 @Injectable()
 export class TournamentsService {
   constructor(
     private readonly tournamentsRepository: TournamentsRepository,
     private readonly imagesService: ImagesService,
-    private readonly teamsService: TeamsService
+    private readonly teamsService: TeamsService,
+    private readonly sportMatchService: SportMatchService,
   ) {}
   async create(
     file: Express.Multer.File,
@@ -119,5 +122,37 @@ export class TournamentsService {
     if(findTournament.length==0)
       throw new NotFoundException("Torneos no encontrados")
     return {statusCode:200,message:'Torneo encontrado con exito',data:findTournament}
+  }
+
+  async createRound(createManySportMatchDto:CreateManySportMatchDto){
+    const {teamsPass,...data}=createManySportMatchDto
+    const tournamentRes=await this.findById(data._idTournament)
+    const tournament=tournamentRes.data
+    let lastRound=tournament.rounds.reduce((acc,item)=>(!acc.nRound || item.nRound>acc.nRound)?item:acc,{}as any)
+    lastRound=Object.keys(lastRound).length==0?null:lastRound
+    if(lastRound && lastRound.status!="finished")
+      throw new ForbiddenException("La ronda anterior no ha terminado")
+    const teams=data.matchs.map(item=>item.teams).flat()
+    const existsTeams=!teamsPass || teamsPass.length==0?false:teamsPass?.some((team)=>teams.includes(team))
+    if(existsTeams)
+      throw new BadRequestException("Estas pasando a un usuario y emparejandolo al mismo tiempo")
+    const teamsRound=lastRound?lastRound.teamsWinners:tournament.teams.map((item)=>item._idTeam)
+    const teamsPassExist=teamsPass?.every((team)=>teamsRound.includes(team))
+    if(!teamsPassExist)
+      throw new NotFoundException("El usuario que estas pasando no se encuentra en esta ronda")
+    const matchSports=await this.sportMatchService.createMany(data,tournament)
+    const matchsId=matchSports.data.map(item=>item._id+'')
+    const saveRound=await this.tournamentsRepository.createRound(tournament._id+'',{
+      _idMatchs:matchsId,
+      nRound:lastRound?lastRound.nRound+1:1,
+      teamsMatchs:teams,
+      teamsWinners:teamsPass?teamsPass:[]
+    })
+    if (saveRound.modifiedCount == 0)
+      throw new ForbiddenException("Ronda no agregada");
+    return {
+      statusCode: 200,
+      message: "Ronda agregada con exito",
+    };
   }
 }

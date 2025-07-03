@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Tournaments, TournamentsSchema } from './tournaments.schema';
 import { ImagesModule } from 'src/utils/images/images.module';
 import { TeamsModule } from '../teams/teams.module';
+import { SportMatchModule } from '../sport_match/sport_match.module';
 
 @Module({
   imports: [
@@ -14,8 +15,8 @@ import { TeamsModule } from '../teams/teams.module';
       process.env.TOURNAMENTS_DB
     ),
     ImagesModule,
-    TeamsModule
-
+    TeamsModule,
+    SportMatchModule
   ],
   controllers: [TournamentsController],
   providers: [TournamentsService, TournamentsRepository],

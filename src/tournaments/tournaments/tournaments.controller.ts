@@ -4,6 +4,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateTournamentDto } from './dto/create-tournaments.dto';
 import { InscribeTeamDto } from './dto/inscribe-team.dto';
 import { FilterTournamentDto } from './dto/filter-tournament.dto';
+import { CreateManySportMatchDto } from '../sport_match/dto/create_many-sport_match.dto';
 
 @Controller('tournaments')
 export class TournamentsController {
@@ -21,5 +22,9 @@ export class TournamentsController {
   @Post("filter")
   filter(@Body() filterTournamentDto: FilterTournamentDto) {
     return this.tournamentsService.filter(filterTournamentDto)
+  }
+  @Post("createRound")
+  createRound(@Body() createManySportMatchDto: CreateManySportMatchDto){
+    return this.tournamentsService.createRound(createManySportMatchDto)
   }
 }

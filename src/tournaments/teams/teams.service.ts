@@ -52,7 +52,12 @@ export class TeamsService {
     }
     return { statusCode: 200, message: "Equipo actualizado con éxito" };
   }
-
+  async findManyByIds(_id:string[]){
+    const teams= await this.teamsRepository.findManyByIds(_id)
+    if(teams.length==0)
+      throw new NotFoundException("No se encontro ningun equipo")
+    return {statusCode:200,message:"Equipos encontrados con exito", data:teams}
+  }
   // Actualizar solo la imagen del equipo
   async updateTeamImage({ _id }: TeamIdDto, updateTeamImageDto: UpdateTeamImageDto) {
     const existingTeam = await this.teamsRepository.existingTeamId(_id);
