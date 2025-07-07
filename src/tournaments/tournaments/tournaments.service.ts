@@ -14,6 +14,7 @@ import { TeamsService } from "../teams/teams.service";
 import { FilterTournamentDto } from "./dto/filter-tournament.dto";
 import { CreateManySportMatchDto } from "../sport_match/dto/create_many-sport_match.dto";
 import { SportMatchService } from "../sport_match/sport_match.service";
+import { FinishedMatchDto } from "./dto/finishedMatch.dto";
 
 @Injectable()
 export class TournamentsService {
@@ -154,5 +155,20 @@ export class TournamentsService {
       statusCode: 200,
       message: "Ronda agregada con exito",
     };
+  }
+  async finishedMatch(finishedMatchDto:FinishedMatchDto){
+    const existMatch=await this.sportMatchService.existMatch(finishedMatchDto._idMatch)
+    if(!existMatch)
+      throw new NotFoundException("Encuentro no encontrado")
+    const existInTour=await this.tournamentsRepository.existMatchTour(finishedMatchDto._idTournament,finishedMatchDto._idMatch)
+    if(!existInTour)
+      throw new NotFoundException("Este encuentro no se encuentra en este torneo")
+    const tournament=await this.tournamentsRepository.findById(finishedMatchDto._idTournament)
+    if(tournament?._idReferee!==finishedMatchDto._idUser)
+      throw new ForbiddenException("No eres el organizador de este torneo")
+    const updateMatchState= await this.sportMatchService.updateMatch(finishedMatchDto)
+    if(updateMatchState.statusCode!==200)
+      throw new BadRequestException(updateMatchState.message)
+    return updateMatchState
   }
 }

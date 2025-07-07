@@ -14,5 +14,12 @@ export class SportMatchRepository {
     const newsMatch=await this.sportMatchModel.insertMany(createSportMatchDto)
     return newsMatch;
   }
-
+  async exist(_id:string){
+    const countMatch=await this.sportMatchModel.countDocuments({_id})
+    return countMatch>0
+  }
+  async closeMatch(update:any,){
+    const {matchedCount,modifiedCount}=await this.sportMatchModel.bulkWrite(update)
+    return {matchedCount,modifiedCount}
+  }
 }

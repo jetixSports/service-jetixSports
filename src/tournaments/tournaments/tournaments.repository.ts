@@ -119,4 +119,8 @@ export class TournamentsRepository {
     return await this.tournamentsModel.updateOne({_id},{$push:{rounds:createRoundDto}}
     )
   }
+  async existMatchTour(_id:string,_idMatch:string){
+    const count=await this.tournamentsModel.countDocuments({_id,"rounds._idMatchs":_idMatch})
+    return count>0
+  }
 }

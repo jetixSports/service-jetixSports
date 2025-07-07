@@ -8,12 +8,12 @@ export class SportMatch extends Document {
   _idTournament: string;
 
   @Prop({
-    type: [[{
+    type: [{
       _idTeam: { type: String, required: true },
       _idStream: { type: String, default: "" },
       playersMembers: { type: [String], default: [] },
       score: { type: Number, },
-    }]]
+    }]
   })
   teams: {
     _idTeam: string,
