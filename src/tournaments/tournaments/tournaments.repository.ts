@@ -98,29 +98,36 @@ export class TournamentsRepository {
     return teams.length > 0 ? teams[0].teams.length : 0
   }
 
-  async filter(filterTournamentDto:FilterTournamentDto){
-    const {teams,...dataFilter}=JSON.parse(JSON.stringify(filterTournamentDto))
-    let filter={...dataFilter}
-    if(teams){
-      Object.entries(teams).forEach(([key,value])=>{
-        filter['teams.'+key]=value
+  async filter(filterTournamentDto: FilterTournamentDto) {
+    const { teams, ...dataFilter } = JSON.parse(JSON.stringify(filterTournamentDto))
+    let filter = { ...dataFilter }
+    if (teams) {
+      Object.entries(teams).forEach(([key, value]) => {
+        filter['teams.' + key] = value
       })
-    }    
+    }
     return await this.tournamentsModel.find(filter)
   }
-  async addUsersTeam(_id:string,users:string[]){
-    return await this.tournamentsModel.updateOne({_id}, {
-    $addToSet: { 
-      _idUsers: { $each: users } 
-    }
-  })
+  async addUsersTeam(_id: string, users: string[]) {
+    return await this.tournamentsModel.updateOne({ _id }, {
+      $addToSet: {
+        _idUsers: { $each: users }
+      }
+    })
   }
-  async createRound(_id:string,createRoundDto:CreateRoundDto){
-    return await this.tournamentsModel.updateOne({_id},{$push:{rounds:createRoundDto}}
+  async createRound(_id: string, createRoundDto: CreateRoundDto) {
+    return await this.tournamentsModel.updateOne({ _id }, { $push: { rounds: createRoundDto } }
     )
   }
-  async existMatchTour(_id:string,_idMatch:string){
-    const count=await this.tournamentsModel.countDocuments({_id,"rounds._idMatchs":_idMatch})
-    return count>0
+  async existMatchTour(_id: string, _idMatch: string) {
+    const count = await this.tournamentsModel.countDocuments({ _id, "rounds._idMatchs": _idMatch })
+    return count > 0
+  }
+
+  async finishedRound(_id:string,nRound:number){
+    return await this.tournamentsModel.updateOne({_id,"rounds.nRound":nRound},{$set:{'rounds.$.status':'finished'}})
+  }
+  async addTeamWinner(_id:string,nRound:number,_idTeamWinner:string){
+    return await this.tournamentsModel.updateOne({_id,"rounds.nRound":nRound},{$push:{'rounds.$.teamsWinners':_idTeamWinner}})
   }
 }

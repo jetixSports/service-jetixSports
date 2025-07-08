@@ -6,6 +6,7 @@ import { InscribeTeamDto } from './dto/inscribe-team.dto';
 import { FilterTournamentDto } from './dto/filter-tournament.dto';
 import { CreateManySportMatchDto } from '../sport_match/dto/create_many-sport_match.dto';
 import { FinishedMatchDto } from './dto/finishedMatch.dto';
+import { FinishedRoundDto } from './dto/finishedRound.dto';
 
 @Controller('tournaments')
 export class TournamentsController {
@@ -31,5 +32,9 @@ export class TournamentsController {
   @Post("finishedMatch")
   finishedMatch(@Body() finishedMatchDto: FinishedMatchDto){
     return this.tournamentsService.finishedMatch(finishedMatchDto)
+  }
+  @Post("finishedRound")
+  finishedRound(@Body() finishedRoundDto: FinishedRoundDto){
+    return this.tournamentsService.finishedRound(finishedRoundDto)
   }
 }

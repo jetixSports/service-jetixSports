@@ -15,6 +15,7 @@ import { FilterTournamentDto } from "./dto/filter-tournament.dto";
 import { CreateManySportMatchDto } from "../sport_match/dto/create_many-sport_match.dto";
 import { SportMatchService } from "../sport_match/sport_match.service";
 import { FinishedMatchDto } from "./dto/finishedMatch.dto";
+import { FinishedRoundDto } from "./dto/finishedRound.dto";
 
 @Injectable()
 export class TournamentsService {
@@ -166,9 +167,40 @@ export class TournamentsService {
     const tournament=await this.tournamentsRepository.findById(finishedMatchDto._idTournament)
     if(tournament?._idReferee!==finishedMatchDto._idUser)
       throw new ForbiddenException("No eres el organizador de este torneo")
+     let lastRound=tournament.rounds.reduce((acc,item)=>(!acc.nRound || item.nRound>acc.nRound)?item:acc,{}as any)
+    lastRound=Object.keys(lastRound).length==0?null:lastRound
+    if(!lastRound || lastRound.status=="finished")
+      throw new ForbiddenException("La ronda anterior no ha terminado")
     const updateMatchState= await this.sportMatchService.updateMatch(finishedMatchDto)
     if(updateMatchState.statusCode!==200)
       throw new BadRequestException(updateMatchState.message)
+    const a=await this.tournamentsRepository.addTeamWinner(finishedMatchDto._idTournament,lastRound.nRound,finishedMatchDto._idTeamWinner)
+    console.log(a);
+    
     return updateMatchState
+  }
+  async finishedRound(finishedRoundDto:FinishedRoundDto){
+    const tournamentRes=await this.findById(finishedRoundDto._idTournament)
+    const tournament=tournamentRes.data
+    if(tournament._idReferee!=finishedRoundDto._idUser)
+      throw new ForbiddenException("No eres el organizador de este Torneo")
+    let lastRound=tournament.rounds.reduce((acc,item)=>(!acc.nRound || item.nRound>acc.nRound)?item:acc,{}as any)
+    lastRound=Object.keys(lastRound).length==0?null:lastRound
+    if(lastRound.status=="finished")
+      throw new BadRequestException("La ultima ronda de este torneo ya se encuentra cerrada")
+    const countFinishedMatch=await this.sportMatchService.countFinishedMatch(lastRound._idMatchs)
+    if(lastRound._idMatchs.length>countFinishedMatch)
+      throw new BadRequestException("No han terminado todos los encuentros de esta ronda")
+    const updateState=await this.tournamentsRepository.finishedRound(finishedRoundDto._idTournament,lastRound.nRound)
+    if (updateState.matchedCount == 0)
+      throw new NotFoundException(
+        "Torneo no encontrado"
+      );
+    if (updateState.modifiedCount == 0)
+      throw new ForbiddenException("Ronda no modificada");
+    return {
+      statusCode: 200,
+      message: "Ronda terminada con exito exito",
+    };
   }
 }

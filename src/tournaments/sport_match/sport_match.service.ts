@@ -4,6 +4,7 @@ import { CreateManySportMatchDto } from './dto/create_many-sport_match.dto';
 import { TeamsService } from '../teams/teams.service';
 import { Tournaments } from '../tournaments/tournaments.schema';
 import { FinishedMatchDto } from '../tournaments/dto/finishedMatch.dto';
+import { MatchFilterDto } from './dto/match-filter.dto';
 
 @Injectable()
 export class SportMatchService {
@@ -38,20 +39,20 @@ export class SportMatchService {
     return await this.sportMatchRepository.exist(_id)
   }
   async updateMatch(finishedMatchDto: FinishedMatchDto) {
-    const updateState = await this.sportMatchRepository.closeMatch(finishedMatchDto.scoreTeams.map((item,index) => ({
+    const updateState = await this.sportMatchRepository.closeMatch(finishedMatchDto.scoreTeams.map((item, index) => ({
       updateOne: {
         filter: {
           _id: finishedMatchDto._idMatch,
           'teams._idTeam': item._idTeam
         },
-        update:index==0? {
+        update: index == 0 ? {
           $set: {
             '_idTeamWinner': finishedMatchDto._idTeamWinner,
             'duration': finishedMatchDto.duration,
             'status': 'finished',
             'teams.$.score': item.score
           }
-        }:{$set:{'teams.$.score': item.score}}
+        } : { $set: { 'teams.$.score': item.score } }
       }
     })))
     if (updateState.matchedCount < 1)
@@ -59,5 +60,16 @@ export class SportMatchService {
     if (updateState.modifiedCount < 1)
       throw new ForbiddenException("Encuentro encontrado pero no modificadp")
     return { statusCode: 200, message: "Encuentro cerrado con exito" }
+  }
+  async findAll(matchFilterDto: MatchFilterDto) {
+    const findMatch = await this.sportMatchRepository.findAll(matchFilterDto)
+    if (findMatch.length == 0)
+      throw new NotFoundException("No se encontro ningun encuentro")
+    return { statusCode: 200, message: "Encuentro encontrado con exito", data: findMatch }
+  }
+  async countFinishedMatch(_id:string[]){
+    if(_id.length==0)
+      throw new BadRequestException("No se envio ningun encuentro")
+    return await this.sportMatchRepository.countFinishedMatch(_id)
   }
 }
