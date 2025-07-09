@@ -144,7 +144,12 @@ export class UsersService {
    
     return { statusCode: 200, message: "Usuario actualizado con exito" ,data:{_idImg:saveImage.data._id}};
   }
-
+  async getNames(filter: {_id:string[]}){
+    const users=await this.usersRepository.getNames(filter)
+    if(users.length==0)
+      throw new NotFoundException("No se encontro a ningun usuario")
+    return {statusCode:200,message:"Usuarios encontrados con exito",data:users}
+  }
 
 }
 

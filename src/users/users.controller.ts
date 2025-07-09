@@ -46,6 +46,11 @@ export class UsersController {
     return this.usersService.filter(filterUsersDto);
   }
 
+  @Post("getNames")
+  async getNames(@Body(ValidationPipe) filter: {_id:string[]}) {
+    return this.usersService.getNames(filter);
+  }
+
   @Get()
   async findAll() {
     return this.usersService.findAll();

@@ -103,4 +103,7 @@ export class UsersRepository {
   async updateImage(_id:string,_idImg:string){
     return await this.usersModel.updateOne({_id},{$set:{_idImg}})
   }
+  async getNames(filter: {_id:string[]}){
+    return await this.usersModel.find({_id:{$in:filter._id}},{firstName:1,lastName:1})
+  }
 }
