@@ -72,4 +72,12 @@ export class SportMatchService {
       throw new BadRequestException("No se envio ningun encuentro")
     return await this.sportMatchRepository.countFinishedMatch(_id)
   }
+  async saveStream(_id: string,_idTeam: string, _idStream: string) {
+    const updateState = await this.sportMatchRepository.saveStream(_id, _idTeam,_idStream)
+    if (updateState.matchedCount == 0)
+      throw new NotFoundException("No se encontro ningun torneo");
+    if (updateState.modifiedCount == 0)
+      throw new NotFoundException("Se encontro el torneo, pero no se modifico");
+    return {statusCode:200,message:"Se actualizo el stream con exito en el torneo"}
+  }
 }

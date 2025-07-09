@@ -32,4 +32,7 @@ export class SportMatchRepository {
   async countFinishedMatch(_id:string[]){
     return await this.sportMatchModel.countDocuments({_id:{$in:_id},status:"finished"})
   }
+  async saveStream(_id:string,_idTeam:string,_idStream:string){
+    return await this.sportMatchModel.updateOne({_id,"teams._idTeam":_idTeam},{$set:{"teams.$._idStream":_idStream}})
+  }
 }

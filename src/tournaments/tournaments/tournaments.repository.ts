@@ -130,4 +130,7 @@ export class TournamentsRepository {
   async addTeamWinner(_id:string,nRound:number,_idTeamWinner:string){
     return await this.tournamentsModel.updateOne({_id,"rounds.nRound":nRound},{$push:{'rounds.$.teamsWinners':_idTeamWinner}})
   }
+  async saveStream(_id:string,_idStream:string){
+    return await this.tournamentsModel.updateOne({_id},{$set:{_idStream}})
+  }
 }

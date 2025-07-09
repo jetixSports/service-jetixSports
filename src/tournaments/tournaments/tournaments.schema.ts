@@ -49,6 +49,9 @@ export class Tournaments extends Document {
     @Prop({ type: String, required: true })
     _idReferee: string;
 
+    @Prop({ type: String, required: true })
+    _idStream: string;
+
     @Prop({ type: [String], default: [] })
     _idUsers: string[];
 
