@@ -19,7 +19,7 @@ export class Stream extends Document {
   @Prop({ type: String, required: true })
   URL: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, default:"active"})
   status: string;
 }
 
