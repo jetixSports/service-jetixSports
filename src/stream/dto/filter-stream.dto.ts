@@ -3,15 +3,15 @@ import { Transform } from 'class-transformer';
 
 export class FilterStreamDto {
   @IsString()
-      @IsOptional()
-    _id?: string;
+  @IsOptional()
+  _id?: string;
 
   @IsString()
   @IsOptional()
   _idTournament?: string;
 
   @IsString()
-   @IsOptional()
+  @IsOptional()
   _idUser?: string;
 
   @IsString()
