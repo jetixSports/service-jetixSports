@@ -13,12 +13,23 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 
 export class VerifyPaymentHistoryDto {
-  @ApiProperty({ description: "User ID associated with the payment" })
-  @IsString()
+  @ApiProperty({
+    description: "ID del usuario asociado al pago",
+    example: "507f1f77bcf86cd799439011",
+    minLength: 24,
+    maxLength: 24,
+    pattern: "^[0-9a-fA-F]{24}$",
+  })
   @IsNotEmpty()
   _idUser: string;
 
-  @ApiProperty({ description: "Tournament ID associated with the payment" })
+  @ApiProperty({
+    description: "ID del pago",
+    example: "507f1f77bcf86cd799439011",
+    minLength: 24,
+    maxLength: 24,
+    pattern: "^[0-9a-fA-F]{24}$",
+  })
   @IsString()
   @IsNotEmpty()
   _idPayment: string;
