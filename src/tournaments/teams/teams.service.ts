@@ -105,7 +105,11 @@ export class TeamsService {
     if (!team) {
       throw new NotFoundException("Equipo no encontrado");
     }
-    return team;
+    return {
+      statusCode: 200,
+      message: "Equipo obtenido con éxito",
+      data: team
+    };
   }
 
   async findTeamByName(name: string) {
@@ -113,7 +117,11 @@ export class TeamsService {
     if (!team) {
       throw new NotFoundException("Equipo no encontrado");
     }
-    return team;
+    return {
+      statusCode: 200,
+      message: "Equipo obtenido con éxito",
+      data: team
+    };
   }
 
   async findTeamsByImage(_idImg: string) {
@@ -121,7 +129,11 @@ export class TeamsService {
     if (!team) {
       throw new NotFoundException("Equipo no encontrado");
     }
-    return team;
+    return  {
+      statusCode: 200,
+      message: "Equipo obtenido con éxito",
+      data: team
+    };
   }
 
   // Obtener imagen del equipo
@@ -201,5 +213,17 @@ export class TeamsService {
       throw new ForbiddenException("Ya te encuentras en este equipo")
     const updateState = await this.teamsRepository.addMember(addMemberDto._idTeam, addMemberDto._idUser)
     return { statusCode: 200, message: "miembro del equipo agregado con exito" }
+  }
+  async filterByIds(_id:string[]){
+    if(_id.length==0)
+      throw new BadRequestException("No se envio ningun equipo")
+    const teams= await this.teamsRepository.filterByIds(_id)
+    if(teams.length==0)
+      throw new NotFoundException("No se encontro ningun equipo")
+    return{
+      statusCode: 200,
+      message: "Equipos obtenidos con éxito",
+      data: teams
+    };
   }
 }

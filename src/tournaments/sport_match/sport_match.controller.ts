@@ -10,5 +10,8 @@ export class SportMatchController {
     const body = JSON.parse(JSON.stringify(matchFilterDto));
     return this.sportMatchService.findAll(body);
   }
-  
+  @Post('findByIds')
+  async findByIds( @Body() {_id}: {_id:string[]}) {
+    return this.sportMatchService.findByIds(_id);
+  }
 }

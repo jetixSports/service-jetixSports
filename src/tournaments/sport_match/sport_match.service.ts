@@ -67,17 +67,26 @@ export class SportMatchService {
       throw new NotFoundException("No se encontro ningun encuentro")
     return { statusCode: 200, message: "Encuentro encontrado con exito", data: findMatch }
   }
-  async countFinishedMatch(_id:string[]){
-    if(_id.length==0)
+  async countFinishedMatch(_id: string[]) {
+    if (_id.length == 0)
       throw new BadRequestException("No se envio ningun encuentro")
     return await this.sportMatchRepository.countFinishedMatch(_id)
   }
-  async saveStream(_id: string,_idTeam: string, _idStream: string) {
-    const updateState = await this.sportMatchRepository.saveStream(_id, _idTeam,_idStream)
+  async findByIds(_id: string[]) {
+    if (_id.length == 0)
+      throw new BadRequestException("No se envio ningun encuentro")
+    const matchs = await this.sportMatchRepository.findByIds(_id)
+    if (matchs.length == 0)
+      throw new NotFoundException("No se encontro ningun encuentro")
+    return { statusCode: 200, message: "Encuentro encontrado con exito", data: matchs }
+
+  }
+  async saveStream(_id: string, _idTeam: string, _idStream: string) {
+    const updateState = await this.sportMatchRepository.saveStream(_id, _idTeam, _idStream)
     if (updateState.matchedCount == 0)
       throw new NotFoundException("No se encontro ningun torneo");
     if (updateState.modifiedCount == 0)
       throw new NotFoundException("Se encontro el torneo, pero no se modifico");
-    return {statusCode:200,message:"Se actualizo el stream con exito en el torneo"}
+    return { statusCode: 200, message: "Se actualizo el stream con exito en el torneo" }
   }
 }

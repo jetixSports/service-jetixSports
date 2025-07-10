@@ -30,7 +30,7 @@ export class StreamService {
 
   async createInMatch(streamData: CreateStreamMatchDto) {
     const team = await this.teamsService.findTeamById({ _id: streamData._idTeam })
-    if (team._idLeader != streamData._idUser)
+    if (team.data._idLeader != streamData._idUser)
       throw new ForbiddenException("No eres el lider de este equipo")
     const matchRes = await this.sportMatchService.findAll({ _id: streamData._idMatch })
     const match = matchRes.data[0]

@@ -73,7 +73,7 @@ export class TournamentsService {
       throw new ForbiddenException("Pago no modificado");
     await this.tournamentsRepository.addPay(VerifyPayTeamTournamentDto._idPayment, VerifyPayTeamTournamentDto._idTournament)
     const team = await this.teamsService.findTeamById({ _id: VerifyPayTeamTournamentDto._idTeam + '' })
-    await this.tournamentsRepository.addUsersTeam(VerifyPayTeamTournamentDto._idTournament, team.members)
+    await this.tournamentsRepository.addUsersTeam(VerifyPayTeamTournamentDto._idTournament, team.data.members)
     return {
       statusCode: 200,
       message: "Pago del equipo dentro del torneo veificado con exito",
@@ -102,12 +102,12 @@ export class TournamentsService {
     const tournament = await this.tournamentsRepository.findById(inscribeTeamDto._idTournament)
     if (!tournament)
       throw new NotFoundException("Torneo no encontrado")
-    if (team._idLeader !== inscribeTeamDto._idUser)
+    if (team.data._idLeader !== inscribeTeamDto._idUser)
       throw new ForbiddenException("No eres el lider de este equipo")
     const existTeam = tournament.teams.find((team) => team._idTeam == inscribeTeamDto._idTeam)
     if (existTeam)
       throw new ForbiddenException("Este equipo ya ese encuentra inscrito en este torneo")
-    const membersInTeam = inscribeTeamDto.playersMembers.every(member => team.members.includes(member))
+    const membersInTeam = inscribeTeamDto.playersMembers.every(member => team.data.members.includes(member))
     if (!membersInTeam)
       throw new BadRequestException("Estas incluyendo usuarios que no son de tu equipo")
     if (tournament.teamSpace != inscribeTeamDto.playersMembers.length)
@@ -115,7 +115,7 @@ export class TournamentsService {
     const coute = await this.tournamentsRepository.countTeamsTournament(inscribeTeamDto._idTournament)
     if (coute >= tournament.quotas)
       throw new BadRequestException("No hay espacio en este torneo")
-    const updateState = await this.tournamentsRepository.addTeam(inscribeTeamDto._idTournament, { _idLeader: team._idLeader, _idTeam: inscribeTeamDto._idTeam, playersMembers: inscribeTeamDto.playersMembers })
+    const updateState = await this.tournamentsRepository.addTeam(inscribeTeamDto._idTournament, { _idLeader: team.data._idLeader, _idTeam: inscribeTeamDto._idTeam, playersMembers: inscribeTeamDto.playersMembers })
     return { statusCode: 200, message: "Inscripcion al torneo con exito" }
   }
 

@@ -35,4 +35,7 @@ export class SportMatchRepository {
   async saveStream(_id:string,_idTeam:string,_idStream:string){
     return await this.sportMatchModel.updateOne({_id,"teams._idTeam":_idTeam},{$set:{"teams.$._idStream":_idStream}})
   }
+  async findByIds(_id:string[]){
+    return await this.sportMatchModel.find({_id:{$in:_id}})
+  }
 }

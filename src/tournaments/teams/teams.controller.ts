@@ -52,6 +52,11 @@ export class TeamsController {
     return await this.teamsService.findTeamByName(name);
   }
 
+  @Post("filterByIds")
+  async filterByIds(@Body() {_id}: {_id:string[]}) {
+    return await this.teamsService.filterByIds(_id);
+  }
+
   @Get()
   async findAllTeams(@Query() filters: any) {
     return await this.teamsService.findAllTeams(filters);

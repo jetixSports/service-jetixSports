@@ -12,7 +12,7 @@ export class InvitationsService {
 
   async createInvitation(createInvitationDto: CreateInvitationDto) {
     const team=await this.teamsService.findTeamById({_id:createInvitationDto.teamId})
-    if(createInvitationDto.invitorId!=team._idLeader)
+    if(createInvitationDto.invitorId!=team.data._idLeader)
       throw new ForbiddenException("No eres el lider de este equipo")
     const existInvitation= await this.invitationsRepository.existInvitation(createInvitationDto.teamId,createInvitationDto.userId,"pending")
     if(existInvitation)

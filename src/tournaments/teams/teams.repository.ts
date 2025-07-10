@@ -111,4 +111,7 @@ export class TeamsRepository {
   async addMember(_id:string,_idMember:string){
     return await this.teamsModel.updateOne({_id},{$push:{members:_idMember}})
   }
+   async filterByIds(_id:string[]){
+    return await this.teamsModel.find({_id:{$in:_id}})
+  }
 }
