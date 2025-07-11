@@ -4,7 +4,6 @@ import {
 import { TeamsRepository } from "./teams.repository";
 import { CreateTeamDto } from "./dto/CreateTeam.dto";
 import { UpdateTeamDto } from "./dto/UpdateTeam.dto";
-import { UpdateTeamImageDto } from "./dto/UpdateTeamImage.dto";
 import { TeamIdDto } from "./dto/TeamId.dto";
 import { AddMemberDto } from "./dto/AddMember.dto";
 import { ImagesService } from "src/utils/images/images.service";
@@ -58,24 +57,6 @@ export class TeamsService {
       throw new NotFoundException("No se encontro ningun equipo")
     return {statusCode:200,message:"Equipos encontrados con exito", data:teams}
   }
-  // Actualizar solo la imagen del equipo
-  async updateTeamImage({ _id }: TeamIdDto, updateTeamImageDto: UpdateTeamImageDto) {
-    const existingTeam = await this.teamsRepository.existingTeamId(_id);
-    if (!existingTeam) {
-      throw new NotFoundException("Equipo no encontrado");
-    }
-
-    const updateResult = await this.teamsRepository.updateTeamImage(_id, updateTeamImageDto);
-    if (updateResult.matchedCount < 1) {
-      throw new NotFoundException("Equipo no encontrado para actualizar imagen");
-    }
-    if (updateResult.modifiedCount < 1) {
-      throw new BadRequestException("No se realizaron cambios en la imagen del equipo");
-    }
-    return { statusCode: 200, message: "Imagen del equipo actualizada con éxito" };
-  }
-
-  // Eliminar equipo
   async deleteTeam({ _id }: TeamIdDto) {
     const deleteResult = await this.teamsRepository.deleteTeam(_id);
     if (deleteResult.matchedCount < 1) {

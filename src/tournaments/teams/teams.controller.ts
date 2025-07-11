@@ -2,7 +2,6 @@ import {Controller, Get, Post, Put, Delete, Body, Param, Query, HttpCode, HttpSt
 import { TeamsService } from "./teams.service";
 import { CreateTeamDto } from "./dto/CreateTeam.dto";
 import { UpdateTeamDto } from "./dto/UpdateTeam.dto";
-import { UpdateTeamImageDto } from "./dto/UpdateTeamImage.dto";
 import { TeamIdDto } from "./dto/TeamId.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 
@@ -31,17 +30,6 @@ export class TeamsController {
   async deleteTeam(@Param() params: TeamIdDto) {
     return await this.teamsService.deleteTeam(params);
   }
-
-  // Actualizar solo la imagen del equipo
-  @Put(":_id/image")
-  async updateTeamImage(
-    @Param() params: TeamIdDto,
-    @Body() updateTeamImageDto: UpdateTeamImageDto
-  ) {
-    return await this.teamsService.updateTeamImage(params, updateTeamImageDto);
-  }
-
-  // Eliminar imagen del equipo
   @Delete(":_id/image")
   async deleteTeamImage(@Param() params: TeamIdDto) {
     return await this.teamsService.deleteTeamImage(params);

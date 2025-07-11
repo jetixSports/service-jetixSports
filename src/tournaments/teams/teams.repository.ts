@@ -3,7 +3,6 @@ import { Teams } from "./teams.schema";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateTeamDto } from "./dto/CreateTeam.dto";
-import { UpdateTeamImageDto } from "./dto/UpdateTeamImage.dto";
 import { UpdateTeamDto } from "./dto/UpdateTeam.dto";
 
 @Injectable()
@@ -49,9 +48,6 @@ export class TeamsRepository {
     return await this.teamsModel.updateOne({ _id, status:{$ne:"delete"} }, { $set: updateTeamDto });
   }
 
-  async updateTeamImage(_id: string, updateTeamImageDto: UpdateTeamImageDto) {
-    return await this.teamsModel.updateOne({ _id }, { $set: updateTeamImageDto });
-  }
   async findManyByIds(_id:string[]){
     return await this.teamsModel.find({_id:{$in:_id}})
   }

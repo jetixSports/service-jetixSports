@@ -17,17 +17,32 @@ import { Transform, Type } from 'class-transformer';
 export class AddTeamDto {
 
 
-    @ApiProperty({ description: 'Tournament ID associated with the payment' })
+    @ApiProperty({
+        description: 'Id del equipo a agregar',
+        example: '5f8d3b5b3b3b3b3b3b3b3b3b',
+        required: true,
+        type: String
+    })
     @IsString()
     @IsNotEmpty()
     _idTeam: string;
 
-    @ApiProperty({ description: 'Tournament ID associated with the payment' })
+    @ApiProperty({
+        description: 'Identificador único del líder del equipo',
+        example: '5f8d3b5b3b3b3b3b3b3b3b3c',
+        required: true,
+    })
     @IsString()
     @IsNotEmpty()
     _idLeader: string;
 
-    @ApiProperty({ type: [String] })
+    @ApiProperty({
+        description: 'Lista de IDs de los jugadores miembros del equipo',
+        example: ['5f8d3b5b3b3b3b3b3b3b3b3d', '5f8d3b5b3b3b3b3b3b3b3b3e'],
+        required: true,
+        type: [String],
+        minItems: 1
+    })
     @IsArray()
     @IsString({ each: true })
     playersMembers: string[];

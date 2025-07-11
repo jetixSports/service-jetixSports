@@ -17,13 +17,22 @@ import { Transform, Type } from 'class-transformer';
 
 export class FinishedRoundDto {
 
-    @ApiProperty({ description: 'Tournament ID associated with the payment' })
+     @ApiProperty({
+        description: 'ID del usuario que finaliza la ronda',
+        example: '507f1f77bcf86cd799439011',
+        required: true,
+        type: String
+    })
     @IsString()
     @IsNotEmpty()
     _idUser: string;
 
-    @ApiProperty({ description: 'Tournament ID associated with the payment' })
-    @IsString()
+    @ApiProperty({
+        description: 'ID del torneo al que pertenece la ronda',
+        example: '658f1f77bcf86cd799439022',
+        required: true,
+        type: String
+    })@IsString()
     @IsNotEmpty()
     _idTournament: string;
 
