@@ -79,7 +79,7 @@ export class TournamentsRepository {
   async addTeam(_idTournament: string, addTeamDto: AddTeamDto) {
     return await this.tournamentsModel.updateOne(
       { _id: _idTournament },
-      { $set: { teams: { ...addTeamDto, status: "pending" } } }
+      { $push: { teams: { ...addTeamDto, status: "pending" } } }
     );
   }
   async countTeamsTournament(_idTournament: string) {
