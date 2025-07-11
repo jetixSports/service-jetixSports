@@ -4,11 +4,14 @@ import { CreateTeamDto } from "./dto/CreateTeam.dto";
 import { UpdateTeamDto } from "./dto/UpdateTeam.dto";
 import { TeamIdDto } from "./dto/TeamId.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { Auth } from "src/decorators/auth/auth.decorator";
+import { Permissions } from "src/decorators/permissions/permissions.decorator";
 
 @Controller("teams")
 export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
 
+  @Auth('Auth')
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async createTeam(
@@ -17,7 +20,8 @@ export class TeamsController {
     return await this.teamsService.createTeam(createTeamDto,file);
   }
 
-   // Actualizar equipo
+
+  @Auth('Auth')
   @Put(":_id")
   async updateTeam(
     @Param() params: TeamIdDto,
@@ -26,6 +30,8 @@ export class TeamsController {
     return await this.teamsService.updateTeam(params, updateTeamDto);
   }
 
+  @Permissions(["Teams"],'DELETE')
+  @Auth('Auth')
   @Delete(":_id")
   async deleteTeam(@Param() params: TeamIdDto) {
     return await this.teamsService.deleteTeam(params);

@@ -21,6 +21,7 @@ import { FilterUsersDto } from "./dto/FilterUsers.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Auth } from "src/decorators/auth/auth.decorator";
 import { Request } from "express";
+import { Permissions } from "src/decorators/permissions/permissions.decorator";
 
 @Controller("users")
 export class UsersController {
@@ -65,11 +66,14 @@ export class UsersController {
     return user;
   }
 
-  @Post("updateUser")
+  @Auth('Auth')
+    @Post("updateUser")
   async updateUser(@Body(ValidationPipe) updateUserDto: UpdateUserDto) {
     return this.usersService.updateUser(updateUserDto);
   }
   
+  @Permissions(["Users"],'DELETE')
+  @Auth('Auth')
   @Delete(":id")
   async remove(@Param("id") id: string) {
     return this.usersService.remove(id);

@@ -10,7 +10,7 @@ import { Permissions } from 'src/decorators/permissions/permissions.decorator';
 export class CurrencyController {
     constructor(private readonly currencyService: CurrencyService) {}
 
-    @Permissions(["permissions"],'CREATE')
+    @Permissions(["currency"],'CREATE')
     @Auth('Auth')
     @Post()
     create(@Body(ValidationPipe) createCurrencyDto: CreateCurrencyDto) {
@@ -37,7 +37,7 @@ export class CurrencyController {
         return this.currencyService.findOne(id);
     }
 
-    @Permissions(["permissions"],'UPDATE')
+    @Permissions(["currency"],'UPDATE')
     @Auth('Auth')
     @Patch(':id')
     update(
@@ -46,7 +46,7 @@ export class CurrencyController {
     ) {
         return this.currencyService.update(id, updateCurrencyDto);
     }
-    @Permissions(["permissions"],'DELETE')
+    @Permissions(["currency"],'DELETE')
     @Auth('Auth')
     @Delete(':id')
     remove(@Param('id') id: string) {
