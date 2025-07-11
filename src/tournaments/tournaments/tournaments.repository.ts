@@ -14,13 +14,13 @@ export class TournamentsRepository {
   constructor(
     @InjectModel(Tournaments.name, process.env.TOURNAMENTS_DB)
     private tournamentsModel: Model<Tournaments>
-  ) { }
+  ) {}
   async create(createTournamentDto: CreateTournamentDto) {
     const newHistory = new this.tournamentsModel(createTournamentDto);
     const savedHistory = await newHistory.save();
     return {
       statusCode: 200,
-      message: "Pago guardado con exito",
+      message: "Torneo guardado con exito",
       data: savedHistory,
     };
   }
@@ -71,17 +71,23 @@ export class TournamentsRepository {
     );
   }
   async addPay(_idPayment: string, _idTournament: string) {
-    return await this.tournamentsModel.updateOne({ _id: _idTournament }, { $push: { _idPayments: _idPayment } })
+    return await this.tournamentsModel.updateOne(
+      { _id: _idTournament },
+      { $push: { _idPayments: _idPayment } }
+    );
   }
   async addTeam(_idTournament: string, addTeamDto: AddTeamDto) {
-    return await this.tournamentsModel.updateOne({ _id: _idTournament }, { $set: { teams: { ...addTeamDto, status: "pending" } } })
+    return await this.tournamentsModel.updateOne(
+      { _id: _idTournament },
+      { $set: { teams: { ...addTeamDto, status: "pending" } } }
+    );
   }
   async countTeamsTournament(_idTournament: string) {
     const teams = await this.tournamentsModel.aggregate([
       {
         $match: {
-          _id: _idTournament
-        }
+          _id: _idTournament,
+        },
       },
       {
         $project: {
@@ -89,48 +95,67 @@ export class TournamentsRepository {
             $filter: {
               input: "$teams",
               as: "item",
-              cond: { $ne: ["$$item.status", "cancel"] }
-            }
-          }
-        }
-      }
-    ])
-    return teams.length > 0 ? teams[0].teams.length : 0
+              cond: { $ne: ["$$item.status", "cancel"] },
+            },
+          },
+        },
+      },
+    ]);
+    return teams.length > 0 ? teams[0].teams.length : 0;
   }
 
   async filter(filterTournamentDto: FilterTournamentDto) {
-    const { teams, ...dataFilter } = JSON.parse(JSON.stringify(filterTournamentDto))
-    let filter = { ...dataFilter }
+    const { teams, ...dataFilter } = JSON.parse(
+      JSON.stringify(filterTournamentDto)
+    );
+    let filter = { ...dataFilter };
     if (teams) {
       Object.entries(teams).forEach(([key, value]) => {
-        filter['teams.' + key] = value
-      })
+        filter["teams." + key] = value;
+      });
     }
-    return await this.tournamentsModel.find(filter)
+    return await this.tournamentsModel.find(filter);
   }
   async addUsersTeam(_id: string, users: string[]) {
-    return await this.tournamentsModel.updateOne({ _id }, {
-      $addToSet: {
-        _idUsers: { $each: users }
+    return await this.tournamentsModel.updateOne(
+      { _id },
+      {
+        $addToSet: {
+          _idUsers: { $each: users },
+        },
       }
-    })
+    );
   }
   async createRound(_id: string, createRoundDto: CreateRoundDto) {
-    return await this.tournamentsModel.updateOne({ _id }, { $push: { rounds: createRoundDto } }
-    )
+    return await this.tournamentsModel.updateOne(
+      { _id },
+      { $push: { rounds: createRoundDto } }
+    );
   }
   async existMatchTour(_id: string, _idMatch: string) {
-    const count = await this.tournamentsModel.countDocuments({ _id, "rounds._idMatchs": _idMatch })
-    return count > 0
+    const count = await this.tournamentsModel.countDocuments({
+      _id,
+      "rounds._idMatchs": _idMatch,
+    });
+    return count > 0;
   }
 
-  async finishedRound(_id:string,nRound:number){
-    return await this.tournamentsModel.updateOne({_id,"rounds.nRound":nRound},{$set:{'rounds.$.status':'finished'}})
+  async finishedRound(_id: string, nRound: number) {
+    return await this.tournamentsModel.updateOne(
+      { _id, "rounds.nRound": nRound },
+      { $set: { "rounds.$.status": "finished" } }
+    );
   }
-  async addTeamWinner(_id:string,nRound:number,_idTeamWinner:string){
-    return await this.tournamentsModel.updateOne({_id,"rounds.nRound":nRound},{$push:{'rounds.$.teamsWinners':_idTeamWinner}})
+  async addTeamWinner(_id: string, nRound: number, _idTeamWinner: string) {
+    return await this.tournamentsModel.updateOne(
+      { _id, "rounds.nRound": nRound },
+      { $push: { "rounds.$.teamsWinners": _idTeamWinner } }
+    );
   }
-  async saveStream(_id:string,_idStream:string){
-    return await this.tournamentsModel.updateOne({_id},{$set:{_idStream}})
+  async saveStream(_id: string, _idStream: string) {
+    return await this.tournamentsModel.updateOne(
+      { _id },
+      { $set: { _idStream } }
+    );
   }
 }
