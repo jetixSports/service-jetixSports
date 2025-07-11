@@ -41,7 +41,7 @@ export class SportMatch extends Document {
   typeSport: string;
 
   @Prop({ type: Date, })
-  initSmatch: Date;
+  initMatch: Date;
 
   @Prop({ select: false, default: "" })
   __v: number;
