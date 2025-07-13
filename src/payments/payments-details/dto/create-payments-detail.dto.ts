@@ -76,7 +76,7 @@ export class Details {
     type: String,
   })
   @IsString()
-  @Transform(({ value }) => value.replaceAll(".", "").replaceAll(",", ""))
+  @Transform(({ value }) => value?.replaceAll(".", "")?.replaceAll(",", ""))
   identity?: string;
 
   @ApiPropertyOptional({
@@ -104,7 +104,7 @@ export class Details {
   @MaxLength(11)
   @MinLength(11)
   @Transform(({ value }) =>
-    value.replaceAll("-", "").replaceAll("+58", "0")?.replaceAll(" ", "")
+    value?.replaceAll("-", "")?.replaceAll("+58", "0")?.replaceAll(" ", "")
   )
   phoneNumber?: string;
 }
