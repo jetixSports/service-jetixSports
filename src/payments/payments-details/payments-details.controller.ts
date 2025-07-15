@@ -8,21 +8,24 @@ import { FindPaymentsDetailDto } from './dto/find-payments-detail.dto';
 
 @Controller('payments-details')
 export class PaymentsDetailsController {
-  constructor(private readonly paymentsDetailsService: PaymentsDetailsService) {}
+  constructor(private readonly paymentsDetailsService: PaymentsDetailsService) { }
   @Auth("Auth")
   @Post()
   create(@Req() request: Request, @Body(ValidationPipe) createPaymentsDetailDto: CreatePaymentsDetailDto) {
-    if(request.userData?._id!=createPaymentsDetailDto._idUser)
+    if (request.userData?._id != createPaymentsDetailDto._idUser)
       throw new ForbiddenException('Estas intentando crear los detalles de pago de otra persona.')
     return this.paymentsDetailsService.create(createPaymentsDetailDto);
   }
   @Auth("Auth")
   @Put(':id')
-  update(@Req() request: Request, @Body(ValidationPipe) updatePaymentsDetailDto: UpdatePaymentsDetailDto,@Param('id') id: string) {
-    const _idUser=request.userData?._id??''
-    return this.paymentsDetailsService.update(id,_idUser,updatePaymentsDetailDto);
+  update(@Req() request: Request, @Body(ValidationPipe) updatePaymentsDetailDto: UpdatePaymentsDetailDto, @Param('id') id: string) {
+    const _idUser = request.userData?._id ?? ''
+    return this.paymentsDetailsService.update(id, _idUser, updatePaymentsDetailDto);
   }
-
+  @Post('findIds')
+  findIds(@Req() request: Request, @Body(ValidationPipe) findPaymentsDetailDto: {id:string[]}) {
+    return this.paymentsDetailsService.findIds(findPaymentsDetailDto);
+  }
   @Post('find')
   find(@Req() request: Request, @Body(ValidationPipe) findPaymentsDetailDto: FindPaymentsDetailDto) {
     return this.paymentsDetailsService.find(findPaymentsDetailDto);

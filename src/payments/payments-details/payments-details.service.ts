@@ -66,4 +66,14 @@ export class PaymentsDetailsService {
       throw new NotFoundException("Detalles de pago ya eliminado anteriormente");
     return { statusCode: 200, message: "Permiso eliminado con exito" };
   }
+  async findIds({id}:{id:string[]}){
+    const details=await this.paymentsDetailsRepository.findIds(id)
+    if(details.length==0)
+      throw new NotFoundException("No se encontro ningun detalle de pago")
+    return {
+      statusCode:200,
+      message:"Detalles de pago obtenidos correctamente",
+      data:details
+    }
+  }
 }

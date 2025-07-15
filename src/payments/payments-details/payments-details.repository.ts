@@ -44,4 +44,7 @@ export class PaymentsDetailsRepository {
             $set:newData
         })
     }
+    async findIds(id:string[]){
+        return await this.paymentsDetailsModel.find({_id:{$in:id}})
+    }
 }

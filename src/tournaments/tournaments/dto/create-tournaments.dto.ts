@@ -66,7 +66,7 @@ export class CreateTournamentDto {
     @IsArray()
     @IsString({ each: true })
     @IsOptional()
-    _idPayments?: string[];
+    _idPayDetails?: string[];
 
     @ApiProperty({
         description: 'ID del árbitro principal asignado',
