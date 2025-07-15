@@ -16,18 +16,6 @@ export class CreateCurrencyDto {
   @Transform(({ value }) => value.replaceAll(".", "").replaceAll(",", ""))
   name: string;
 
-  @ApiProperty({
-    description: "Código ISO de la moneda",
-    example: "USD",
-    minLength: 1,
-    maxLength: 3,
-    required: true,
-    pattern: "^[A-Z]{3}$",
-  })
-  @IsNotEmpty({ message: "El código de la moneda es requerido" })
-  @IsString({ message: "El código debe ser una cadena de texto" })
-  @Length(2, 50, { message: "El código debe tener entre 1 y 3 caracteres" })
-  code: string;
 
   @ApiProperty({
     description: "Símbolo o signo de la moneda",
@@ -42,5 +30,20 @@ export class CreateCurrencyDto {
     message: "El nombre corto debe tener entre 1 y 5 caracteres",
   })
   @Transform(({ value }) => value.replaceAll(".", "").replaceAll(",", ""))
+
+  
+  code: string;
+
+  @ApiProperty({
+    description: "Código ISO de la moneda",
+    example: "USD",
+    minLength: 1,
+    maxLength: 3,
+    required: true,
+    pattern: "^[A-Z]{3}$",
+  })
+  @IsNotEmpty({ message: "El código de la moneda es requerido" })
+  @IsString({ message: "El código debe ser una cadena de texto" })
+  @Length(2, 50, { message: "El código debe tener entre 1 y 3 caracteres" })
   shortname: string;
 }
