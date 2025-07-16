@@ -37,7 +37,10 @@ export class TournamentsRepository {
   }: AddPayTeamTournamentDto) {
     return await this.tournamentsModel.updateOne(
       { _id: _idTournament, "teams._idTeam": _idTeam },
-      { $set: { ["teams.$._idPayments"]: _idPayment } }
+      {
+        $set: { ["teams.$._idPayments"]: _idPayment },
+        $push: { _idPayments: _idPayment },
+      }
     );
   }
   async verifyPayTeam({
