@@ -34,4 +34,10 @@ export class PaymentsHistoryRepository {
       { $set: { status } }
     );
   }
+  async findByIds(_id: string[], status?: string) {
+    return await this.paymentsHistoryModel.find({
+      _id: { $in: _id },
+      ...(status ? { status } : {}),
+    });
+  }
 }

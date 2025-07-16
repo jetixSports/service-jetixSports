@@ -32,4 +32,8 @@ export class PaymentsHistoryController {
   denied(@Body() deniedPaymentHistory: VerifyPaymentHistoryDto) {
     return this.paymentsHistoryService.deniedPay(deniedPaymentHistory);
   }
+  @Post("findIds")
+  findIds(@Body() filter: { _id: string[]; status?: string }) {
+    return this.paymentsHistoryService.findIds(filter);
+  }
 }

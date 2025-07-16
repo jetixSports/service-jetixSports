@@ -28,8 +28,8 @@ export class PaymentsHistoryService {
     const team = dataTournament.data.teams.find(
       (team) => team._idLeader == createPaymentHistoryDto._idUser
     );
-    if(dataTournament.data.amount>createPaymentHistoryDto.amount)
-      throw new ForbiddenException('El pago no cumple con el precio requerido')
+    if (dataTournament.data.amount > createPaymentHistoryDto.amount)
+      throw new ForbiddenException("El pago no cumple con el precio requerido");
     if (!team)
       throw new ForbiddenException("No eres el lider de ningun equipo");
     if (team._idPayments)
@@ -101,5 +101,18 @@ export class PaymentsHistoryService {
         "Ha ocurrido un error al verificar el pago del equipo"
       );
     return { status: 200, message: "Pago verificado con exito" };
+  }
+  async findIds(filter: { _id: string[]; status?: string }) {
+    const pays = await this.paymentsHistoryRepository.findByIds(
+      filter._id,
+      filter?.status == "" ? undefined : filter.status
+    );
+    if (pays.length == 0)
+      throw new NotFoundException("No se encontro ningun pago");
+    return {
+      message: "Pagos encontrados con exito",
+      statusCode: 200,
+      data: pays,
+    };
   }
 }
