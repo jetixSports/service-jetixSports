@@ -52,10 +52,10 @@ export class PaymentsDetailsService {
     }
     const updateState = await this.paymentsDetailsRepository.update(_id,updateData)
     if (updateState.matchedCount < 1)
-      throw new NotFoundException("Permiso a actualizar no encontrado");
+      throw new NotFoundException("Detalles de pago a actualizar no encontrado");
     if (updateState.modifiedCount < 1)
-      throw new NotFoundException("Permiso encontrado, pero no actualizado");
-    return { statusCode: 200, message: "Permiso actualizado con exito" };
+      throw new NotFoundException("Detalles de pago encontrado, pero no actualizado");
+    return { statusCode: 200, message: "Detalles de pago actualizado con exito" };
   }
 
   async remove(id: string) {
@@ -64,7 +64,7 @@ export class PaymentsDetailsService {
       throw new NotFoundException("Detalles de pago no encontrado");
     if (deleteState.modifiedCount < 1)
       throw new NotFoundException("Detalles de pago ya eliminado anteriormente");
-    return { statusCode: 200, message: "Permiso eliminado con exito" };
+    return { statusCode: 200, message: "Detalles de pago eliminado con exito" };
   }
   async findIds({id}:{id:string[]}){
     const details=await this.paymentsDetailsRepository.findIds(id)
