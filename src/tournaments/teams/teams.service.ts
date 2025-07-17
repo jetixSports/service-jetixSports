@@ -82,6 +82,8 @@ export class TeamsService {
 
   //Busquedas
   async findTeamById({ _id }: TeamIdDto) {
+    console.log(_id);
+    
     const team = await this.teamsRepository.findTeamById(_id);
     if (!team) {
       throw new NotFoundException("Equipo no encontrado");

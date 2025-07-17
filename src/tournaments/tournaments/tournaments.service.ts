@@ -71,8 +71,10 @@ export class TournamentsService {
       );
     if (verifyState.modifiedCount == 0)
       throw new ForbiddenException("Pago no modificado");
-    await this.tournamentsRepository.addPay(VerifyPayTeamTournamentDto._idPayment, VerifyPayTeamTournamentDto._idTournament)
-    const team = await this.teamsService.findTeamById({ _id: VerifyPayTeamTournamentDto._idTeam + '' })
+    const tournament=await this.tournamentsRepository.findById(VerifyPayTeamTournamentDto._idTournament)
+      const idTeam=tournament?.teams?.find(t=>t?._idPayments==VerifyPayTeamTournamentDto._idPayment)?._idTeam
+    const team = await this.teamsService.findTeamById({ _id: idTeam+ '' })
+    
     await this.tournamentsRepository.addUsersTeam(VerifyPayTeamTournamentDto._idTournament, team.data.members)
     return {
       statusCode: 200,
