@@ -70,7 +70,7 @@ export class TournamentsRepository {
         "teams._idPayments": _idPayment,
         ...teamQuery,
       },
-      { $unset: { ["teams.$._idPayments"]: "" } }
+      { $set: { ["teams.$.status"]: "denied" } }
     );
   }
   async addPay(_idPayment: string, _idTournament: string) {

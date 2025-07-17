@@ -77,7 +77,7 @@ export class PaymentsHistoryService {
       throw new InternalServerErrorException(
         "Ha ocurrido un error al verificar el pago del equipo"
       );
-    return { status: 200, message: "Pago verificado con exito" };
+    return { statusCode: 200, message: "Pago verificado con exito" };
   }
   async deniedPay({ _idUser, _idPayment }: VerifyPaymentHistoryDto) {
     const findPayment =
@@ -100,7 +100,7 @@ export class PaymentsHistoryService {
       throw new InternalServerErrorException(
         "Ha ocurrido un error al verificar el pago del equipo"
       );
-    return { status: 200, message: "Pago verificado con exito" };
+    return { statusCode: 200, message: "Pago verificado con exito" };
   }
   async findIds(filter: { _id: string[]; status?: string }) {
     const pays = await this.paymentsHistoryRepository.findByIds(
